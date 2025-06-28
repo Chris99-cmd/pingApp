@@ -1,0 +1,23 @@
+{
+  "name": "bntt",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^37.1.0"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.1.2",
+    "exceljs": "^4.4.0",
+    "jsbarcode": "^3.12.1",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.25",
+    "xlsx": "^0.18.5"
+  }
+}

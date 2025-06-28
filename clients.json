@@ -1,0 +1,792 @@
+[
+  {
+    "owner": "Joie Uba",
+    "contact": "09984536654",
+    "address": "La Verna Hills, Buhangin",
+    "pets": [
+      {
+        "name": "Ashy",
+        "size": "XL",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "None",
+        "tangling": "None",
+        "shedding": "None",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Belgian",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "Yes",
+          "deworming": "Yes"
+        },
+        "barcode": "602003",
+        "createdAt": "6/28/2025, 2:44:32 AM",
+        "sessions": [],
+        "totalSpent": 690
+      }
+    ]
+  },
+  {
+    "owner": "Joie Uba",
+    "contact": "09987785665",
+    "address": "Buhangin, DC",
+    "pets": [
+      {
+        "name": "Ashy",
+        "size": "XL",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "Mild",
+        "shedding": "Extreme",
+        "groomer": "Jeff Carumba",
+        "pre": "Aggressive",
+        "post": "",
+        "breed": "Belgian",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": false,
+          "rabies": false,
+          "tickflea": false,
+          "deworming": false
+        },
+        "barcode": "190340",
+        "createdAt": "6/28/2025, 3:00:01 AM",
+        "age": 24,
+        "weight": 24.5,
+        "gender": "Female",
+        "sessions": [],
+        "totalSpent": 3030
+      },
+      {
+        "name": "Tisoy",
+        "size": "Medium",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Genital Trimming"
+        ],
+        "matting": "Mild",
+        "tangling": "Mild",
+        "shedding": "Mild",
+        "groomer": "Ezer Tunacao",
+        "pre": "None",
+        "post": "",
+        "breed": "Shih tzu",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": "No",
+          "rabies": "No",
+          "tickflea": "No",
+          "deworming": "No"
+        },
+        "barcode": "698478",
+        "createdAt": "6/28/2025, 3:00:01 AM",
+        "age": 18,
+        "weight": 9,
+        "gender": "Male",
+        "sessions": [],
+        "totalSpent": 1090
+      }
+    ]
+  },
+  {
+    "owner": "Joie Uba",
+    "contact": "09987787675",
+    "address": "Buhangin DC",
+    "pets": [
+      {
+        "name": "Ashy",
+        "size": "XL",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "Mild",
+        "shedding": "Moderate",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Belgian",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "No",
+          "deworming": "No"
+        },
+        "barcode": "133308",
+        "createdAt": "6/28/2025, 3:09:53 AM",
+        "age": 24,
+        "weight": 24.5,
+        "gender": "Female",
+        "sessions": [],
+        "totalSpent": 1440
+      },
+      {
+        "name": "Tisoy",
+        "size": "Small",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "Mild",
+        "shedding": "Mild",
+        "groomer": "Ezer Tunacao",
+        "pre": "None",
+        "post": "",
+        "breed": "Shih tzu",
+        "analogy": "Canine",
+        "health": "Aggressive",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "No",
+          "deworming": "No"
+        },
+        "barcode": "309653",
+        "createdAt": "6/28/2025, 3:09:53 AM",
+        "age": 9,
+        "weight": 11.5,
+        "gender": "Male",
+        "sessions": [],
+        "totalSpent": 990
+      }
+    ]
+  },
+  {
+    "owner": "Joie Uba",
+    "contact": "09987876654",
+    "address": "Panacan DC",
+    "pets": [
+      {
+        "name": "Ashy",
+        "size": "XL",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "Moderate",
+        "shedding": "Mild",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Belgian",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": true,
+          "rabies": true,
+          "tickflea": true,
+          "deworming": true
+        },
+        "barcode": "363291",
+        "createdAt": "6/28/2025, 3:27:19 AM",
+        "age": 23,
+        "weight": 26,
+        "gender": "Female",
+        "sessions": [
+          {
+            "date": "2025-06-27T19:27:19.553Z",
+            "createdAt": "6/28/2025, 3:27:19 AM",
+            "pkg": "Basic",
+            "express": [
+              "Ear Cleaning"
+            ],
+            "matting": "Mild",
+            "tangling": "Moderate",
+            "shedding": "Mild",
+            "price": 1440,
+            "groomer": "Jeff Carumba",
+            "redeemed": false,
+            "age": 22,
+            "weight": 24.5,
+            "size": "XL"
+          },
+          {
+            "date": "2025-06-29",
+            "pkg": "Basic",
+            "price": 1090,
+            "groomer": "Jeff Carumba",
+            "express": [
+              "Teeth Cleaning"
+            ],
+            "redeemed": false,
+            "createdAt": "6/28/2025, 3:28:25 AM",
+            "age": 23,
+            "weight": 26,
+            "size": "XL",
+            "health": "Good",
+            "matting": "Mild",
+            "tangling": "Mild",
+            "shedding": "None",
+            "pre": "None",
+            "post": "",
+            "vaccinations": {
+              "parvo": true,
+              "rabies": true,
+              "tickflea": true,
+              "deworming": true
+            }
+          }
+        ],
+        "totalSpent": 2530
+      },
+      {
+        "name": "Tisoy",
+        "size": "Medium",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Genital Trimming"
+        ],
+        "matting": "Extreme",
+        "tangling": "Mild",
+        "shedding": "None",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Shih Tzu",
+        "analogy": "Canine",
+        "health": "Aggressive",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "No",
+          "deworming": "No"
+        },
+        "barcode": "573077",
+        "createdAt": "6/28/2025, 3:27:19 AM",
+        "age": 18,
+        "weight": 9,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-27T19:27:19.553Z",
+            "createdAt": "6/28/2025, 3:27:19 AM",
+            "pkg": "Basic",
+            "express": [
+              "Genital Trimming"
+            ],
+            "matting": "Extreme",
+            "tangling": "Mild",
+            "shedding": "None",
+            "price": 1390,
+            "groomer": "Jeff Carumba",
+            "redeemed": false,
+            "age": 18,
+            "weight": 9,
+            "size": "Medium"
+          }
+        ],
+        "totalSpent": 1390
+      }
+    ]
+  },
+  {
+    "owner": "Toping Gonzales",
+    "contact": "09778687765",
+    "address": "Buhangin DC",
+    "pets": [
+      {
+        "name": "Queso",
+        "size": "Small",
+        "pkg": "Deluxe",
+        "expressSelected": [
+          "Teeth Cleaning"
+        ],
+        "matting": "None",
+        "tangling": "None",
+        "shedding": "Moderate",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Persian",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "Yes",
+          "deworming": "Yes"
+        },
+        "barcode": "926593",
+        "createdAt": "6/28/2025, 4:05:58 AM",
+        "age": 9,
+        "weight": 3.1,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-27T20:05:58.582Z",
+            "createdAt": "6/28/2025, 4:05:58 AM",
+            "pkg": "Deluxe",
+            "express": [
+              "Teeth Cleaning"
+            ],
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "Moderate",
+            "price": 940,
+            "groomer": "Jeff Carumba",
+            "redeemed": false,
+            "age": 9,
+            "weight": 3.1,
+            "size": "Small"
+          }
+        ],
+        "totalSpent": 940
+      }
+    ]
+  },
+  {
+    "owner": "Lyka Lligunas",
+    "contact": "09887786767",
+    "address": "Cagayan De Oro",
+    "pets": [
+      {
+        "name": "Toping",
+        "size": "Large",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Teeth Cleaning"
+        ],
+        "matting": "Extreme",
+        "tangling": "Extreme",
+        "shedding": "Extreme",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "Tricerotops",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": true,
+          "rabies": true,
+          "tickflea": true,
+          "deworming": true
+        },
+        "barcode": "679535",
+        "createdAt": "6/28/2025, 4:09:10 AM",
+        "age": 26,
+        "weight": 70,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-27T20:09:10.110Z",
+            "createdAt": "6/28/2025, 4:09:10 AM",
+            "pkg": "Basic",
+            "express": [
+              "Teeth Cleaning"
+            ],
+            "matting": "Extreme",
+            "tangling": "Extreme",
+            "shedding": "Extreme",
+            "price": 2690,
+            "groomer": "Jeff Carumba",
+            "redeemed": false,
+            "age": 26,
+            "weight": 70,
+            "size": "Large"
+          },
+          {
+            "date": "2025-06-28",
+            "pkg": "Basic",
+            "price": 1090,
+            "groomer": "Jeff Carumba",
+            "express": [
+              "Teeth Cleaning"
+            ],
+            "redeemed": false,
+            "createdAt": "6/28/2025, 4:16:26 AM",
+            "age": 26,
+            "weight": 70,
+            "size": "XL",
+            "health": "Good",
+            "matting": "Mild",
+            "tangling": "Mild",
+            "shedding": "None",
+            "pre": "None",
+            "post": "",
+            "vaccinations": {
+              "parvo": true,
+              "rabies": true,
+              "tickflea": true,
+              "deworming": true
+            }
+          }
+        ],
+        "totalSpent": 3780
+      }
+    ]
+  },
+  {
+    "owner": "Kent Armas",
+    "contact": "09987765543",
+    "address": "Panacan DC",
+    "pets": [
+      {
+        "name": "Armani",
+        "size": "Small",
+        "pkg": "Basic",
+        "expressSelected": [],
+        "matting": "None",
+        "tangling": "None",
+        "shedding": "None",
+        "groomer": "Ezer Tunacao",
+        "pre": "None",
+        "post": "",
+        "breed": "Poodle",
+        "analogy": "Canine",
+        "health": "Good",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "Yes",
+          "deworming": "Yes"
+        },
+        "barcode": "646624",
+        "createdAt": "6/28/2025, 4:45:27 AM",
+        "age": 4,
+        "weight": 24.6,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-27T20:45:27.505Z",
+            "createdAt": "6/28/2025, 4:45:27 AM",
+            "pkg": "Basic",
+            "express": [],
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "None",
+            "price": 290,
+            "groomer": "Ezer Tunacao",
+            "redeemed": false,
+            "age": 4,
+            "weight": 24.6,
+            "size": "Small"
+          }
+        ],
+        "totalSpent": 290
+      }
+    ]
+  },
+  {
+    "owner": "Nina Delafuente",
+    "contact": "09987787672",
+    "address": "El rio",
+    "pets": [
+      {
+        "name": "wishu",
+        "size": "Small",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "None",
+        "shedding": "None",
+        "groomer": "Ezer Tunacao",
+        "pre": "None",
+        "post": "",
+        "breed": "shih tzu",
+        "analogy": "Canine",
+        "health": "Allergy",
+        "vaccinations": {
+          "parvo": false,
+          "rabies": false,
+          "tickflea": false,
+          "deworming": false
+        },
+        "barcode": "970703",
+        "createdAt": "6/28/2025, 1:23:45 PM",
+        "age": 1,
+        "weight": 2,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-28T05:23:45.783Z",
+            "createdAt": "6/28/2025, 1:23:45 PM",
+            "pkg": "Basic",
+            "express": [
+              "Ear Cleaning"
+            ],
+            "matting": "Mild",
+            "tangling": "None",
+            "shedding": "None",
+            "price": 590,
+            "groomer": "Ezer Tunacao",
+            "redeemed": false,
+            "age": 0,
+            "weight": 0,
+            "size": "Small"
+          },
+          {
+            "date": "2025-06-28",
+            "pkg": "Premium",
+            "price": 1490,
+            "groomer": "Jeff Carumba",
+            "express": [],
+            "redeemed": false,
+            "createdAt": "6/28/2025, 1:26:44 PM",
+            "age": 1,
+            "weight": 2,
+            "size": "Medium",
+            "health": "Allergy",
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "Extreme",
+            "pre": "None",
+            "post": "",
+            "vaccinations": {
+              "parvo": false,
+              "rabies": false,
+              "tickflea": false,
+              "deworming": false
+            }
+          }
+        ],
+        "totalSpent": 2080
+      }
+    ]
+  },
+  {
+    "owner": "asdads",
+    "contact": "09987787652",
+    "address": "el rio",
+    "pets": [
+      {
+        "name": "qweqweqweqw",
+        "size": "Small",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning",
+          "Paw Pad Trimming"
+        ],
+        "matting": "Mild",
+        "tangling": "Moderate",
+        "shedding": "Mild",
+        "groomer": "Jeff Carumba",
+        "pre": "None",
+        "post": "",
+        "breed": "qweq",
+        "analogy": "Canine",
+        "health": "None",
+        "vaccinations": {
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "Yes",
+          "deworming": "Yes"
+        },
+        "barcode": "497136",
+        "createdAt": "6/28/2025, 7:09:49 PM",
+        "age": 8,
+        "weight": 18,
+        "gender": "Male",
+        "sessions": [
+          {
+            "date": "2025-06-28T11:09:49.040Z",
+            "createdAt": "6/28/2025, 7:09:49 PM",
+            "pkg": "Basic",
+            "express": [
+              "Ear Cleaning",
+              "Paw Pad Trimming"
+            ],
+            "matting": "Mild",
+            "tangling": "Moderate",
+            "shedding": "Mild",
+            "price": 1240,
+            "groomer": "Jeff Carumba",
+            "redeemed": false,
+            "age": 8,
+            "weight": 18,
+            "size": "Small"
+          }
+        ],
+        "totalSpent": 1240
+      }
+    ]
+  },
+  {
+    "owner": "nino curang",
+    "contact": "09987785563",
+    "address": "el rio",
+    "pets": [
+      {
+        "name": "shiro",
+        "size": "Small",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning",
+          "Genital Trimming",
+          "Teeth Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "None",
+        "shedding": "Extreme",
+        "groomer": "Ezer Tunacao",
+        "pre": "None",
+        "post": "",
+        "breed": "shih tzu",
+        "analogy": "Canine",
+        "health": "Newly nanganak",
+        "vaccinations": {
+          "parvo": false,
+          "rabies": false,
+          "tickflea": true,
+          "deworming": true
+        },
+        "barcode": "503720",
+        "createdAt": "6/28/2025, 8:21:29 PM",
+        "age": 19,
+        "weight": 26,
+        "gender": "Male",
+        "jobOrder": 1059,
+        "sessions": [
+          {
+            "date": "2025-06-28T12:21:29.252Z",
+            "createdAt": "6/28/2025, 8:21:29 PM",
+            "pkg": "Basic",
+            "express": [
+              "Ear Cleaning",
+              "Genital Trimming",
+              "Teeth Cleaning"
+            ],
+            "matting": "Mild",
+            "tangling": "None",
+            "shedding": "Extreme",
+            "price": 1490,
+            "groomer": "Ezer Tunacao",
+            "redeemed": false,
+            "age": 18,
+            "weight": 24.5,
+            "size": "Small",
+            "jobOrder": 1059
+          },
+          {
+            "date": "2025-06-29",
+            "pkg": "Deluxe",
+            "price": 1390,
+            "groomer": "Jeff Carumba",
+            "express": [
+              "Teeth Cleaning"
+            ],
+            "redeemed": false,
+            "createdAt": "6/28/2025, 8:25:33 PM",
+            "age": 19,
+            "weight": 26,
+            "size": "Medium",
+            "health": "Newly nanganak",
+            "matting": "Extreme",
+            "tangling": "None",
+            "shedding": "None",
+            "pre": "None",
+            "post": "",
+            "vaccinations": {
+              "parvo": false,
+              "rabies": false,
+              "tickflea": true,
+              "deworming": true
+            }
+          }
+        ],
+        "totalSpent": 2880
+      }
+    ]
+  },
+  {
+    "owner": "Lyka Lligunas",
+    "contact": "09887657765",
+    "address": "Cagayan De Oro",
+    "pets": [
+      {
+        "name": "Toping",
+        "size": "XL",
+        "pkg": "Basic",
+        "expressSelected": [
+          "Ear Cleaning",
+          "Teeth Cleaning"
+        ],
+        "matting": "Mild",
+        "tangling": "Mild",
+        "shedding": "Extreme",
+        "groomer": "Ezer Tunacao",
+        "pre": "Buotan na ni sya",
+        "post": "",
+        "breed": "Dinosaur",
+        "analogy": "Canine",
+        "health": "None",
+        "vaccinations": {
+          "parvo": true,
+          "rabies": true,
+          "tickflea": true,
+          "deworming": true
+        },
+        "barcode": "615894",
+        "createdAt": "6/28/2025, 10:02:22 PM",
+        "age": 27,
+        "weight": 71,
+        "gender": "Male",
+        "jobOrder": 1061,
+        "sessions": [
+          {
+            "date": "2025-06-28T14:02:22.488Z",
+            "createdAt": "6/28/2025, 10:02:22 PM",
+            "pkg": "Basic",
+            "express": [
+              "Ear Cleaning",
+              "Teeth Cleaning"
+            ],
+            "matting": "Mild",
+            "tangling": "Mild",
+            "shedding": "Extreme",
+            "price": 1890,
+            "groomer": "Ezer Tunacao",
+            "redeemed": false,
+            "age": 26,
+            "weight": 70,
+            "size": "XL",
+            "jobOrder": 1061
+          },
+          {
+            "date": "2025-06-28",
+            "pkg": "Premium",
+            "price": 1090,
+            "groomer": "Jeff Carumba",
+            "express": [],
+            "redeemed": false,
+            "createdAt": "6/28/2025, 10:05:50 PM",
+            "age": 27,
+            "weight": 71,
+            "size": "XXL",
+            "health": "None",
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "None",
+            "pre": "Buotan na ni sya",
+            "post": "",
+            "vaccinations": {
+              "parvo": true,
+              "rabies": true,
+              "tickflea": true,
+              "deworming": true
+            }
+          }
+        ],
+        "totalSpent": 2980
+      }
+    ]
+  }
+]

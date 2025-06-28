@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="adminDashboard.css">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+  <div class="topbar">
+    <div class="left" onclick="location.href='adminDashboard.html'">
+      <img src="assets/bnttlogo_3.png" alt="Logo">
+      <h1>Bontot Pet Grooming</h1>
+    </div>
+    <div class="right">
+      <button class="username" onclick="toggleDropdown()">Admin ▼</button>
+      <div class="dropdown" id="dropdownMenu">
+        <button onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <label>Filter by Groomer:</label>
+    <select id="groomerFilter"><option value="all">All</option></select>
+
+    <label>Filter by Date:</label>
+    <select id="dateFilter"><option value="all">All</option></select>
+
+    <button onclick="exportCSV()">📤 Export Report</button>
+  </div>
+
+  <div class="summary">
+    <p><strong>Total Sessions:</strong> <span id="totalSessions">0</span></p>
+    <p><strong>Total Revenue:</strong> ₱<span id="totalRevenue">0.00</span></p>
+  </div>
+
+  <div class="charts">
+    <div class="chart-block">
+      <canvas id="salesChart" height="200"></canvas>
+      <div class="legend">📈 Session Trends: Jun 27 - Highest, Jun 28 - Average, Jun 29 - Lowest</div>
+    </div>
+    <div class="chart-block">
+      <div id="googlePieChart" style="width: 550px; height: 385px;"></div>
+      <div class="legend">
+        🟡 Premium - 16 avails<br>
+        🔵 Basic - 10 avails<br>
+        🟠 Deluxe - 5 avails
+      </div>
+    </div>
+  </div>
+
+  <button onclick="window.location.href='registerClerk.html'">➕ Register Clerk</button>
+  <button onclick="window.location.href='adminSessionSummary.html'">📋 View Grooming Session Summaries</button>
+
+  <div class="groomer-section">
+    <h3>Manage Groomers</h3>
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <button onclick="addGroomer()">➕ Add Groomer</button>
+    <ul class="groomer-list" id="groomerList"></ul>
+  </div>
+
+<div class="clerk-section">
+  <h3>Manage Clerks</h3>
+  <input type="text" id="clerkFirstName" placeholder="First Name">
+  <input type="text" id="clerkLastName" placeholder="Last Name">
+  <button onclick="addClerk()">➕ Add Clerk</button>
+  <ul class="clerk-list" id="clerkList"></ul>
+</div>
+
+  <script src="adminDashboard.js"> 
+  </script>
+</body>
+</html>

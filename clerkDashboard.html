@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clerk Dashboard</title>
+  <link rel="stylesheet" href="clerkDashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js"></script>
+  <link rel="stylesheet" href="topBar.css">
+</head>
+<body>
+  <div id="topBarContainer"></div>
+
+  <div class="main-content">
+    <div class="left-column">
+      <h1>New Client Registration</h1>
+      <form id="clientForm">
+        <fieldset>
+          <legend>Grooming Information</legend>
+
+          <label>Date:
+            <input type="date" id="registrationDate" required>
+          </label><br>
+
+          <label>Owner Full Name:
+            <input id="ownerName" placeholder="Owner Full Name" required>
+          </label><br>
+
+          <label>Contact No.:
+            <input id="contact" placeholder="Contact No." required>
+          </label><br>
+
+          <label>Address:
+            <input id="address" placeholder="Address" required>
+          </label>
+        </fieldset>
+        <div id="petSections"></div>
+        <button type="button" id="addPetBtn">+ Pet Information</button><br>
+        <p><strong>Total for all pets: ₱<span id="dashboardTotal">0</span></strong></p>
+        <button type="button" id="printSummaryBtn">🖨 Print Summary</button>
+        <button type="submit">Save Client</button>
+        
+      </form>
+    </div>
+
+<div class="main-content">
+
+  <div class="column-separator"></div> <!-- vertical orange line -->
+
+  <div class="right-column">
+    <h2 class="column-title">Existing Clients</h2>
+
+    <div class="card">
+      <h3>Scan or Type Pet Barcode</h3>
+      <input id="searchBarcodeInput" placeholder="Scan or Type Pet Barcode">
+      <button id="loadClientBtn">Load Client</button>
+    </div>
+
+    <div class="card">
+      <h3>View/Edit Clients</h3>
+      <button id="goToClientListBtn">Go to Client List</button>
+    </div>
+  </div>
+</div>
+  <script>
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const topBarPath = path.join(__dirname, 'topBar.html');
+      const topBarContainer = document.getElementById('topBarContainer');
+
+      fs.readFile(topBarPath, 'utf8', (err, data) => {
+        if (!err) {
+          topBarContainer.innerHTML = data;
+          initTopBarEvents();
+        }
+      });
+    });
+
+    function initTopBarEvents() {
+      document.querySelector('.user-info')?.addEventListener('click', () => {
+        document.getElementById('userDropdown')?.classList.toggle('show');
+      });
+
+      document.getElementById('darkModeToggle')?.addEventListener('change', function () {
+        document.body.classList.toggle('dark-mode', this.checked);
+        localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
+      });
+
+      if (localStorage.getItem('darkMode') === 'true') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('darkModeToggle').checked = true;
+      }
+
+      document.querySelector('.logout')?.addEventListener('click', () => {
+        localStorage.clear();
+        window.location = 'login.html';
+
+      });
+    }
+  </script>
+<div id="printArea" style="display:none;"></div>
+
+  <script src="clerkDashboard.js"></script>
+  <script src="topBar.js"></script>
+  
+</body>
+</html>

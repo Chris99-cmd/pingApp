@@ -1,0 +1,160 @@
+/* BASE RESET */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding-top: 50px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* LAYOUT */
+.main-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 24px;
+}
+
+.left-column {
+  flex: 2;
+  min-width: 300px;
+}
+
+.right-column {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* CARDS */
+.card {
+  background-color: #1e1e1e;
+  padding: 1rem;
+  border: 1px solid #2c2c2c;
+  margin-bottom: 1.5rem;
+}
+
+/* LABELS */
+label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #bbbbbb;
+  margin: 16px 0 4px;
+}
+
+/* FORM ELEMENTS */
+input,
+select,
+button {
+  font-size: 1rem;
+  padding: 10px;
+  border: 1px solid #333;
+  background-color: #222;
+  color: #e0e0e0;
+  width: 100%;
+  margin-top: 4px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #555;
+}
+
+/* BUTTONS */
+button {
+  cursor: pointer;
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+  color: #e0e0e0;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+/* USER MENU */
+.user-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.user-avatar {
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 0.5rem;
+}
+
+.user-dropdown.show {
+  display: block;
+}
+
+#logoutBtn {
+  padding: 4px 8px;
+  font-size: 0.8rem;
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  transition: background-color 0.2s ease;
+}
+
+#logoutBtn:hover {
+  background-color: #444;
+}
+
+.express-group {
+  border: 1px solid #444;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.express-checkboxes label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: start;
+  margin: 4px 0;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.express-checkboxes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px 12px;
+  align-items: start;
+  justify-items: start;  /* Ensures each grid item aligns to the left */
+}
+
+
+.column-separator {
+  width: 2px;
+  background-color: #ff7b00;
+  margin: 0 20px;
+}

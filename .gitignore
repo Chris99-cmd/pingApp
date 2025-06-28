@@ -1,0 +1,37 @@
+# Ignore node_modules (huge folder, not needed in repo)
+node_modules/
+
+# Ignore logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Ignore OS junk files
+.DS_Store
+Thumbs.db
+
+# Ignore build output (if you use Electron packagers like electron-builder)
+dist/
+out/
+
+# Ignore environment files or secrets
+.env
+.env.local
+.env.*.local
+
+# Ignore any local database or temp files
+*.sqlite
+*.db
+*.bak
+*.tmp
+
+# Ignore Electron settings or crash dumps
+*.pid
+*.swp
+*.swo
+*.psd
+*.seed
+
+# Optional: VSCode workspace settings
+.vscode/

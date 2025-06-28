@@ -1,0 +1,172 @@
+/* BASE STYLES */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  padding: 24px;
+  padding-top: 50px;
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+/* HEADINGS */
+h2, h3 {
+  color: #f0f0f0;
+  font-weight: 600;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+  margin-bottom: 16px;
+  padding-top: 10px;
+}
+
+/* CONTAINERS */
+.main-content {
+  max-width: 800px;
+  margin: auto;
+}
+
+.client-info,
+.pet-info,
+.session-history,
+form {
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+/* LABELS */
+label {
+  display: block;
+  margin-top: 14px;
+  font-size: 0.95rem;
+  color: #cccccc;
+}
+
+/* INPUTS & SELECTS */
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  background-color: #222;
+  border: 1px solid #333;
+  color: #f0f0f0;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #555;
+}
+
+/* BUTTON */
+button {
+  margin-top: 20px;
+  padding: 10px 16px;
+  background-color: #2e2e2e;
+  color: #e0e0e0;
+  border: 1px solid #444;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #444;
+}
+
+/* SESSION HISTORY */
+.session-history ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.session-history li {
+  border-bottom: 1px solid #2a2a2a;
+  padding: 8px 0;
+  font-size: 0.95rem;
+  color: #dddddd;
+}
+
+/* CLIENT & PET INFO SECTIONS */
+#ownerInfo,
+#petInfo {
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 16px;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+}
+
+/* TITLES WITHIN THOSE SECTIONS */
+#ownerInfo h3,
+#petInfo h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+/* SESSION HISTORY LIST */
+#sessionHistoryList {
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 16px;
+  margin-top: 10px;
+  list-style-type: none;
+  color: #dddddd;
+}
+
+#sessionHistoryList li {
+  padding: 10px 0;
+  border-bottom: 1px solid #2a2a2a;
+  font-size: 0.95rem;
+}
+
+#sessionHistoryList li:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  margin-top: 40px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 4px;
+}
+
+/* TWO-COLUMN LAYOUT FOR CLIENT AND PET INFO */
+.info-columns {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.info-column {
+  flex: 1;
+  min-width: 300px;
+  background-color: #1e1e1e;
+  border: 1px solid #2c2c2c;
+  padding: 16px;
+  color: #e0e0e0;
+}
+
+.info-column h3 {
+  margin-top: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f0f0f0;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}

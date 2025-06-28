@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BNTT Login</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+
+<body>
+  <div class="version-label">pingApp_main_BNTT_testGrooming_v0.1.0</div>
+  <form id="loginForm">
+    <div class="logo-container">
+      <img src="assets/bnttlogo_3.png" alt="BNTT Logo" class="logo-img" />
+    </div>
+    <h2>BONTOT PET GROOMING</h2>
+    <label>Username:</label>
+    <input type="text" id="username" required />
+    <label>Password:</label>
+    <input type="password" id="password" required />
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    const fs = require('fs');
+    const path = require('path');
+    const form = document.getElementById('loginForm');
+    const usersPath = path.join(__dirname, 'users.json');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      if (!fs.existsSync(usersPath)) {
+        alert('No users registered yet.');
+        return;
+      }
+
+      const users = JSON.parse(fs.readFileSync(usersPath));
+      const user = users.find(u => u.username === username && u.password === password);
+
+      if (user) {
+        window.location = user.role === 'admin' ? 'adminDashboard.html' : 'clerkDashboard.html';
+      } else {
+        alert('Invalid credentials');
+      }
+    });
+  </script>
+
+<div class="footer-note">
+  This application is currently in its testing phase and is exclusively developed for BONTOT PET GROOMING. All rights reserved.
+</div>
+</body>
+</html>

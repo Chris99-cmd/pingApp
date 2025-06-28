@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register Clerk</title>
+</head>
+<body>
+  <h2>Register a Clerk Account</h2>
+  <form id="clerkForm">
+    <label>Username:</label><br />
+    <input type="text" id="username" required /><br />
+    <label>Password:</label><br />
+    <input type="password" id="password" required /><br />
+    <label>Confirm Password:</label><br />
+    <input type="password" id="confirmPassword" required /><br /><br />
+    <button type="submit">Add Clerk</button>
+  </form>
+
+  <button onclick="window.location = 'adminDashboard.html'">⬅ Back to Dashboard</button>
+
+  <script>
+    const fs = require('fs');
+    const path = require('path');
+    const form = document.getElementById('clerkForm');
+    const usersPath = path.join(__dirname, 'users.json');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      let users = [];
+      if (fs.existsSync(usersPath)) {
+        users = JSON.parse(fs.readFileSync(usersPath));
+      }
+
+      if (users.some(u => u.username === username)) {
+        alert('Username already exists!');
+        return;
+      }
+
+      users.push({ username, password, role: 'clerk' });
+      fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+      alert('Clerk registered successfully!');
+      window.location = 'adminDashboard.html';
+    });
+  </script>
+</body>
+</html>
