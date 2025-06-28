@@ -723,7 +723,7 @@
         "tangling": "Mild",
         "shedding": "Extreme",
         "groomer": "Ezer Tunacao",
-        "pre": "Buotan na ni sya",
+        "pre": "None",
         "post": "",
         "breed": "Dinosaur",
         "analogy": "Canine",
@@ -736,7 +736,7 @@
         },
         "barcode": "615894",
         "createdAt": "6/28/2025, 10:02:22 PM",
-        "age": 27,
+        "age": 28,
         "weight": 71,
         "gender": "Male",
         "jobOrder": 1061,
@@ -783,9 +783,34 @@
               "tickflea": true,
               "deworming": true
             }
+          },
+          {
+            "date": "2025-06-29",
+            "pkg": "Basic",
+            "price": 390,
+            "groomer": "Jeff Carumba",
+            "express": [],
+            "redeemed": false,
+            "createdAt": "6/29/2025, 12:46:23 AM",
+            "jobOrder": 1064,
+            "age": 28,
+            "weight": 71,
+            "size": "Medium",
+            "health": "None",
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "None",
+            "pre": "None",
+            "post": "",
+            "vaccinations": {
+              "parvo": true,
+              "rabies": true,
+              "tickflea": true,
+              "deworming": true
+            }
           }
         ],
-        "totalSpent": 2980
+        "totalSpent": 3370
       }
     ]
   }

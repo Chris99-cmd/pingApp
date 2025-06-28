@@ -185,6 +185,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const expressSelected = [...document.querySelectorAll('.sessionExpress:checked')].map(cb => cb.value);
     const age = parseInt(document.getElementById('sessionAge').value);
     const weight = parseFloat(document.getElementById('sessionWeight').value);
+const jobOrderNumber = getNextJobOrderNumber();
 
     const vaccinations = {
       parvo: document.querySelector('input[name="parvo"]:checked')?.value === 'yes',
@@ -211,6 +212,8 @@ window.addEventListener('DOMContentLoaded', () => {
   express: expressSelected,
   redeemed: false,
   createdAt: getPhilippineTimestamp(),
+    jobOrder: jobOrderNumber,
+
 
   // Session-specific snapshot fields:
   age,
@@ -266,7 +269,9 @@ window.addEventListener('DOMContentLoaded', () => {
       express: expressSelected,
       total: price,
       groomer,
-      createdAt: newSession.createdAt
+      createdAt: newSession.createdAt,
+        jobOrder: jobOrderNumber,
+
     });
     fs.writeFileSync(summaryPath, JSON.stringify(summaries, null, 2));
 
@@ -404,17 +409,17 @@ document.getElementById('printSessionBtn').addEventListener('click', () => {
             text-align: center;
             margin-top: 30px;
           }
-          .signature-line {
-            border-top: 1px solid #000;
-            width: 250px;
-            text-align: center;
-            font-size: 14px;
-            padding-top: 4px;
-          }
+           .signature-line {
+          border-top: 1px solid #000;
+          width: 180px;
+          text-align: center;
+          font-size: 14px;
+          padding-top: 4px;
+        }
           .signature-row {
             display: flex;
-            justify-content: space-between;
-            margin-top: 60px;
+          justify-content: space-around;
+          margin-top: 40px;
           }
           @media print {
             body {

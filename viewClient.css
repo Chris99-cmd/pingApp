@@ -26,16 +26,21 @@
     }
 
     table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-    th, td {
-      padding: 10px;
-      border: 1px solid #444;
-      text-align: center;
-    }
+th, td {
+  padding: 10px;
+  border: 1px solid #444;
+  text-align: center;
+  white-space: nowrap;        
+  overflow: hidden;            
+  text-overflow: ellipsis;     
+  vertical-align: middle;
+}
+
 
     th {
       background-color: #333;

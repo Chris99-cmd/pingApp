@@ -72,6 +72,7 @@ function applyFilters() {
         row.innerHTML = `
           <td>${sessionDate.toLocaleDateString()}</td>
           <td>${session.createdAt ? new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}</td>
+          <td>${session.jobOrder || '-'}</td> <!-- NEW -->
           <td>${client.owner}</td>
           <td>${client.contact}</td>
           <td>${pet.name}</td>
@@ -123,6 +124,7 @@ function showModal(client, pet, session) {
     <label>Gender: <input type="text" value="${pet.gender || '-'}" disabled></label>
     <label>Age: <input type="text" value="${session.age || '-'}" disabled></label>
     <label>Weight: <input type="text" value="${session.weight || '-'}" disabled></label>
+    <label>Job Order #: <input type="text" value="${session.jobOrder || '-'}" disabled></label>
     <label>Barcode: <input type="text" value="${pet.barcode}" disabled></label>
     <label>Size: <input type="text" value="${session.size}" disabled></label>
     <label>Package: <input type="text" value="${session.pkg}" disabled></label>
@@ -241,67 +243,179 @@ document.getElementById("exportBtn").addEventListener("click", async () => {
 
   // Get visible rows only
   const rows = Array.from(document.querySelectorAll("#sessionTableBody tr"))
+  .filter(row => row.style.display !== "none")
+  .map(row => {
+    const cells = row.querySelectorAll("td");
+    return Array.from(cells).slice(0, 19).map(cell => cell.innerText); // all 19 data columns
+  });
+
+
+  const headers = [[
+  "Date",
+  "Time Created",
+  "J.O.",
+  "Owner",
+  "Contact",
+  "Pet",
+  "Breed",
+  "Analogy",
+  "Gender",
+  "Age",
+  "Weight",
+  "Barcode",
+  "Size",
+  "Package",
+  "Express",
+  "Matting",
+  "Tangling",
+  "Shedding",
+  "Groomer",
+  "Price"
+]];
+
+
+if (response === 0) {
+  // 📄 PDF Export (Trimmed & Corrected Columns)
+  const doc = new jsPDF({ orientation: 'landscape' });
+  doc.setFontSize(12);
+  doc.text("Client Session Summary", 14, 15);
+
+  const trimmedHeaders = [["Date", "Time", "J.O.", "Owner", "Contact", "Pet", "Breed", "Size", "Package", "Groomer", "Price"]];
+
+  const trimmedRows = Array.from(document.querySelectorAll("#sessionTableBody tr"))
+  .filter(row => row.style.display !== "none")
+  .map(row => {
+    const cells = row.querySelectorAll("td");
+    return [
+      cells[0]?.innerText,  // Date
+      cells[1]?.innerText,  // Time
+      cells[2]?.innerText,  // J.O.
+      cells[3]?.innerText,  // Owner
+      cells[4]?.innerText,  // Contact
+      cells[5]?.innerText,  // Pet
+      cells[7]?.innerText,  // Breed
+      cells[12]?.innerText, // Size
+      cells[13]?.innerText, // Package
+      cells[18]?.innerText, // Groomer
+      `₱${parseFloat(cells[19]?.innerText.replace(/[^\d.]/g, '') || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
+    ];
+  });
+
+  let totalSessions = trimmedRows.length;
+  let totalAmount = trimmedRows.reduce((sum, row) => {
+    const price = parseFloat(row[10]?.replace(/[₱,]/g, '')) || 0;
+    return sum + price;
+  }, 0);
+
+  doc.autoTable({
+    head: trimmedHeaders,
+    body: trimmedRows,
+    startY: 25,
+    styles: { fontSize: 9 },
+    theme: 'striped',
+    headStyles: { fillColor: [22, 160, 133] },
+    margin: { left: 10, right: 10 },
+    didDrawPage: (data) => {
+      doc.setFontSize(10);
+      doc.text(`Page ${doc.internal.getNumberOfPages()}`, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 10);
+    }
+  });
+
+  const finalY = doc.lastAutoTable.finalY + 10;
+  doc.setFontSize(10);
+  doc.text(`Total Sessions: ${totalSessions}`, 14, finalY);
+  doc.text(`Total Amount: ₱${totalAmount.toLocaleString()}`, 14, finalY + 10);
+
+  const pdfData = doc.output("blob");
+  const pdfBuffer = Buffer.from(await pdfData.arrayBuffer());
+
+  const pdfPath = dialog.showSaveDialogSync({
+    title: "Save PDF",
+    defaultPath: "client_sessions.pdf",
+    filters: [{ name: "PDF Files", extensions: ["pdf"] }]
+  });
+
+  if (pdfPath) {
+    require("fs").writeFileSync(pdfPath, pdfBuffer);
+    alert("✅ PDF saved!");
+  }
+}
+ else if (response === 1) {
+  // 📊 Excel Export
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet("Client Sessions");
+
+  const headers = [
+    "Date", "Time", "J.O.", "Owner", "Contact", "Pet", "Breed", "Analogy", "Gender",
+    "Age", "Weight", "Barcode", "Size", "Package", "Express", "Matting",
+    "Tangling", "Shedding", "Groomer", "Price"
+  ];
+  sheet.addRow(headers);
+
+  let totalAmount = 0;
+
+  const rows = Array.from(document.querySelectorAll("#sessionTableBody tr"))
     .filter(row => row.style.display !== "none")
     .map(row => {
       const cells = row.querySelectorAll("td");
+
+      const price = parseFloat(cells[19]?.innerText.replace(/[₱,]/g, '')) || 0;
+      totalAmount += price;
+
       return [
         cells[0]?.innerText,  // Date
-        cells[2]?.innerText,  // Owner
-        cells[4]?.innerText,  // Pet
-        cells[5]?.innerText,  // Breed
-        cells[17]?.innerText, // Groomer
-        cells[12]?.innerText, // Package
-        cells[18]?.innerText  // Price
+        cells[1]?.innerText,  // Time
+        cells[2]?.innerText,  // J.O.
+        cells[3]?.innerText,  // Owner
+        cells[4]?.innerText,  // Contact
+        cells[5]?.innerText,  // Pet
+        cells[6]?.innerText,  // Breed
+        cells[7]?.innerText,  // Analogy
+        cells[8]?.innerText,  // Gender
+        cells[9]?.innerText,  // Age
+        cells[10]?.innerText, // Weight
+        cells[11]?.innerText, // Barcode
+        cells[12]?.innerText, // Size
+        cells[13]?.innerText, // Package
+        cells[14]?.innerText, // Express
+        cells[15]?.innerText, // Matting
+        cells[16]?.innerText, // Tangling
+        cells[17]?.innerText, // Shedding
+        cells[18]?.innerText, // Groomer
+        parseFloat(cells[19]?.innerText.replace(/[^\d.]/g, '') || '0').toFixed(2)
       ];
     });
 
-  const headers = [["Date", "Owner", "Pet", "Breed", "Groomer", "Package", "Price"]];
+  rows.forEach(r => sheet.addRow(r));
 
-  if (response === 0) {
-    // 📄 PDF Export
-    const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.text("Client Session History", 14, 15);
-    doc.autoTable({
-      head: headers,
-      body: rows,
-      startY: 25,
-      styles: { fontSize: 9 }
+  // Add summary rows
+  sheet.addRow([]);
+  sheet.addRow(["Total Sessions", rows.length]);
+  sheet.addRow(["Total Amount", `₱${totalAmount.toFixed(2)}`]);
+
+  // Auto-size all columns
+  sheet.columns.forEach(column => {
+    let maxLength = 10;
+    column.eachCell({ includeEmpty: true }, cell => {
+      const cellValue = cell.value ? cell.value.toString() : "";
+      maxLength = Math.max(maxLength, cellValue.length + 2);
     });
+    column.width = maxLength;
+  });
 
-    const pdfData = doc.output("blob");
-    const pdfBuffer = Buffer.from(await pdfData.arrayBuffer());
+  const buffer = await workbook.xlsx.writeBuffer();
+  const excelPath = dialog.showSaveDialogSync({
+    title: "Save Excel",
+    defaultPath: "client_sessions.xlsx",
+    filters: [{ name: "Excel Files", extensions: ["xlsx"] }]
+  });
 
-    const pdfPath = dialog.showSaveDialogSync({
-      title: "Save PDF",
-      defaultPath: "client_sessions.pdf",
-      filters: [{ name: "PDF Files", extensions: ["pdf"] }]
-    });
-
-    if (pdfPath) {
-      require("fs").writeFileSync(pdfPath, pdfBuffer);
-      alert("✅ PDF saved!");
-    }
-
-  } else if (response === 1) {
-    // 📊 Excel Export
-    const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet("Client Sessions");
-    sheet.addRow(headers[0]);
-    rows.forEach(r => sheet.addRow(r));
-
-    const buffer = await workbook.xlsx.writeBuffer();
-    const excelPath = dialog.showSaveDialogSync({
-      title: "Save Excel",
-      defaultPath: "client_sessions.xlsx",
-      filters: [{ name: "Excel Files", extensions: ["xlsx"] }]
-    });
-
-    if (excelPath) {
-      require("fs").writeFileSync(excelPath, Buffer.from(buffer));
-      alert("✅ Excel saved!");
-    }
+  if (excelPath) {
+    require("fs").writeFileSync(excelPath, Buffer.from(buffer));
+    alert("✅ Excel saved!");
   }
+}
+
 });
 
 
