@@ -2,10 +2,11 @@
 <html>
 <head>
   <title>Clerk Dashboard</title>
-  <link rel="stylesheet" href="clerkDashboard.css">
+  <link rel="stylesheet" href="css/clerkDashboard.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode/dist/JsBarcode.all.min.js"></script>
-  <link rel="stylesheet" href="topBar.css">
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
+  <link rel="stylesheet" href="css/topBar.css">
 </head>
 <body>
   <div id="topBarContainer"></div>
@@ -61,46 +62,10 @@
     </div>
   </div>
 </div>
-  <script>
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const topBarPath = path.join(__dirname, 'topBar.html');
-      const topBarContainer = document.getElementById('topBarContainer');
-
-      fs.readFile(topBarPath, 'utf8', (err, data) => {
-        if (!err) {
-          topBarContainer.innerHTML = data;
-          initTopBarEvents();
-        }
-      });
-    });
-
-    function initTopBarEvents() {
-      document.querySelector('.user-info')?.addEventListener('click', () => {
-        document.getElementById('userDropdown')?.classList.toggle('show');
-      });
-
-      document.getElementById('darkModeToggle')?.addEventListener('change', function () {
-        document.body.classList.toggle('dark-mode', this.checked);
-        localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
-      });
-
-      if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-        document.getElementById('darkModeToggle').checked = true;
-      }
-
-      document.querySelector('.logout')?.addEventListener('click', () => {
-        localStorage.clear();
-        window.location = 'login.html';
-
-      });
-    }
-  </script>
 <div id="printArea" style="display:none;"></div>
 
-  <script src="clerkDashboard.js"></script>
-  <script src="topBar.js"></script>
+  <script src="js/clerkDashboard.js"></script>
+  <script src="js/topBar.js"></script>
   
 </body>
 </html>

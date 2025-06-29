@@ -4,9 +4,10 @@ const { dialog } = require('@electron/remote');
 const { jsPDF } = require("jspdf");
 require("jspdf-autotable");
 const ExcelJS = require("exceljs");
-const clientsPath = path.join(__dirname, 'clients.json');
-const groomersPath = path.join(__dirname, 'groomers.json');
-
+const clientsPath = path.join(__dirname, './data/clients.json');
+const groomersPath = path.join(__dirname, './data/groomers.json');
+const topBarHtml = fs.readFileSync(path.join(__dirname, 'topBar.html'), 'utf-8');
+document.getElementById('topBarContainer').innerHTML = topBarHtml;
 const tableBody = document.getElementById('sessionTableBody');
 const groomerFilter = document.getElementById('filterGroomer');
 const analogyFilter = document.getElementById('filterAnalogy');

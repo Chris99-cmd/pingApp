@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-
 function loadTopBar() {
   const topBarContainer = document.getElementById('topBarContainer');
   const topBarPath = path.join(__dirname, 'topBar.html');
@@ -30,3 +29,6 @@ function initTopBarEvents() {
 }
 
 module.exports = { loadTopBar };
+window.addEventListener('DOMContentLoaded', () => {
+  loadTopBar();
+});

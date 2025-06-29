@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Prices and Packages</title>
+  <link rel="stylesheet" href="css/pricesAndPackages.css">
+</head>
+<body>
+  <div class="container">
+    <button id="backBtn">← Back to Dashboard</button>
+
+  <div class="section">
+  <h2>Packages</h2>
+  <div class="list-and-button">
+    <div id="packageList"></div>
+    <button onclick="addPackage()">+ Add Package</button>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Sizes</h2>
+  <div class="list-and-button">
+    <div id="sizeList"></div>
+    <button onclick="addSize()">+ Add Size</button>
+  </div>
+</div>
+
+<!-- Repeat same structure for Express, Matting, Tangling, Shedding -->
+
+    <div class="section">
+      <h2>Express Services</h2>
+      <div id="expressList"></div>
+      <button onclick="addExpress()">+ Add Express Service</button>
+    </div>
+
+    <div class="section">
+      <h2>Dematting</h2>
+      <div id="mattingList"></div>
+      <button onclick="addSeverity('matting', mattingPath, matting, () => renderSeverity(mattingListEl, matting, 'matting'))">
+        + Add Dematting Service
+      </button>
+    </div>
+
+    <div class="section">
+      <h2>Detangling</h2>
+      <div id="tanglingList"></div>
+      <button onclick="addSeverity('tangling', tanglingPath, tangling, () => renderSeverity(tanglingListEl, tangling, 'tangling'))">
+        + Add Detangling Service
+      </button>
+    </div>
+
+    <div class="section">
+      <h2>Deshedding</h2>
+      <div id="sheddingList"></div>
+      <button onclick="addSeverity('shedding', sheddingPath, shedding, () => renderSeverity(sheddingListEl, shedding, 'shedding'))">
+        + Add Deshedding Service
+      </button>
+    </div>
+
+    <div class="section">
+      <h2>Pricing Table</h2>
+      <table class="price-table" id="priceTable"></table>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button id="savePricesBtn">💾 Save All Prices</button>
+      <span id="saveStatus" style="margin-left: 10px; color: #4caf50;"></span>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h3 id="modalTitle">Edit</h3>
+      <input type="text" id="modalInput">
+      <div class="modal-buttons">
+        <button id="modalCancel">Cancel</button>
+        <button id="modalSave">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/pricesAndPackages.js"></script>
+</body>
+</html>

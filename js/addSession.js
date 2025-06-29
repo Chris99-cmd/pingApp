@@ -1,33 +1,69 @@
 const fs = require('fs');
 const path = require('path');
-const jobOrderPath = path.join(__dirname, 'jobOrderCounter.json');
-const { loadTopBar } = require('./topBar.js');
-    loadTopBar(); 
+const jobOrderPath = path.join(__dirname, './data/jobOrderCounter.json');
 const topBarHtml = fs.readFileSync(path.join(__dirname, 'topBar.html'), 'utf-8');
 document.getElementById('topBarContainer').innerHTML = topBarHtml;
 
-const clientsPath = path.join(__dirname, 'clients.json');
-const summaryPath = path.join(__dirname, 'sessionSummaries.json');
-const groomersPath = path.join(__dirname, 'groomers.json');
+const clientsPath = path.join(__dirname, './data/clients.json');
+const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
+const groomersPath = path.join(__dirname, './data/groomers.json');
+const pricesPath = path.join(__dirname, './data/prices.json');
+const expressPath = path.join(__dirname, './data/express.json');
+const mattingPath = path.join(__dirname, './data/matting.json');
+const tanglingPath = path.join(__dirname, './data/tangling.json');
+const sheddingPath = path.join(__dirname, './data/shedding.json');
+const sizesPath = path.join(__dirname, './data/sizes.json');
+const packagesPath = path.join(__dirname, './data/packages.json');
 
-let currentClient = null;
-let currentPet = null;
+let pricingData = { packages: {}, express: {}, extras: {} };
 
-const pricing = {
-  Basic: { Small: 290, Medium: 390, Large: 490, XL: 590, XXL: 690 },
-  Deluxe: { Small: 490, Medium: 590, Large: 690, XL: 790, XXL: 890 },
-  Premium: { Small: 690, Medium: 790, Large: 890, XL: 990, XXL: 1090 },
-  Extras: { None: 0, Mild: 200, Moderate: 350, Severe: 550, Extreme: 700 },
-  ExpressServices: {
-    "Bath and Blow Dry": 100,
-    "Claw Trimming": 100,
-    "Ear Cleaning": 100,
-    "Genital Trimming": 100,
-    "Paw Pad Trimming": 100,
-    "Teeth Cleaning": 100
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+try {
+  pricingData.packages = JSON.parse(fs.readFileSync(pricesPath));
+
+  const expressList = JSON.parse(fs.readFileSync(expressPath));
+  pricingData.express = {};
+  const expressContainer = document.querySelector('.express-group');
+  expressList.forEach(item => {
+    pricingData.express[item.name] = item.price;
+    const label = document.createElement('label');
+    label.innerHTML = `<input type="checkbox" class="sessionExpress" value="${item.name}"> ${item.name}`;
+    expressContainer.appendChild(label);
+  });
+
+  ['matting', 'tangling', 'shedding'].forEach(type => {
+    pricingData.extras[type] = {};
+    const data = JSON.parse(fs.readFileSync(path.join(__dirname, `./data/${type}.json`)));
+    const select = document.getElementById(`session${capitalize(type)}`);
+    select.innerHTML = '';
+    data.forEach(item => {
+      pricingData.extras[type][item.label] = item.price;
+      const opt = document.createElement('option');
+      opt.value = item.label;
+      opt.textContent = item.label;
+      select.appendChild(opt);
+    });
+  });
+} catch (err) {
+  alert('❌ Failed to load pricing data');
+  console.error(err);
+}
+
+function getOptions(filePath, labelKey = 'label') {
+  try {
+    const data = JSON.parse(fs.readFileSync(filePath));
+    if (Array.isArray(data) && typeof data[0] === 'string') return data;
+    return data.map(d => d[labelKey]);
+  } catch {
+    return [];
   }
-  
-};
+}
+
+const sizes = getOptions(sizesPath);
+const packages = getOptions(packagesPath);
 
 function getNextJobOrderNumber() {
   let counter = 1055;
@@ -53,10 +89,30 @@ window.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('sessionForm');
   const toggleFormBtn = document.getElementById('toggleFormBtn');
   const groomerSelect = document.getElementById('sessionGroomer');
-  const historyList = document.getElementById('sessionHistoryList');
-  const ownerInfoDiv = document.getElementById('ownerInfo');
-  const petInfoDiv = document.getElementById('petInfo');
   const totalDisplay = document.getElementById('sessionTotal');
+
+  // Populate size and package dropdowns
+document.getElementById('sessionSize').innerHTML =
+  sizes.map(s => `<option value="${s}">${s}</option>`).join('');
+
+document.getElementById('sessionPackage').innerHTML =
+  '<option value="None">None</option>' +
+  packages.map(p => `<option value="${p}">${p}</option>`).join('');
+
+// Inject "None" + dynamic options for matting, tangling, shedding
+const mattingOptions = ['None', ...getOptions(mattingPath)];
+const tanglingOptions = ['None', ...getOptions(tanglingPath)];
+const sheddingOptions = ['None', ...getOptions(sheddingPath)];
+
+document.getElementById('sessionMatting').innerHTML =
+  mattingOptions.map(o => `<option value="${o}">${o}</option>`).join('');
+
+document.getElementById('sessionTangling').innerHTML =
+  tanglingOptions.map(o => `<option value="${o}">${o}</option>`).join('');
+
+document.getElementById('sessionShedding').innerHTML =
+  sheddingOptions.map(o => `<option value="${o}">${o}</option>`).join('');
+
 
   const ageInput = document.createElement('input');
   ageInput.type = 'number';
@@ -71,7 +127,6 @@ window.addEventListener('DOMContentLoaded', () => {
   weightInput.placeholder = 'Weight (kg)';
   weightInput.required = true;
 
-  // Inject Age and Weight fields inside the form
   const groomerField = document.getElementById('sessionGroomer').parentElement;
   groomerField.insertAdjacentHTML('beforebegin', `
     <label>Age (months): <input type="number" id="sessionAge" placeholder="Age (months):" required></label>
@@ -89,7 +144,9 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   }
 
- function updateSessionHistory() {
+ const historyList = document.getElementById('sessionHistoryList');
+
+function updateSessionHistory() {
   historyList.innerHTML = '';
   if (currentPet.sessions && currentPet.sessions.length > 0) {
     currentPet.sessions.forEach((s, i) => {
@@ -98,7 +155,6 @@ window.addEventListener('DOMContentLoaded', () => {
       li.innerHTML = `
         <strong>Session ${i + 1}</strong>: ${displayTime} — 
         ${s.pkg} — ₱${s.price} — Groomer: ${s.groomer || 'N/A'}
-        ${s.redeemed ? ' 🎁 FREE' : ''}
       `;
       historyList.appendChild(li);
     });
@@ -126,14 +182,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     currentPet.sessions = currentPet.sessions || [];
 
-    ownerInfoDiv.innerHTML = `
+    document.getElementById('ownerInfo').innerHTML = `
       <h3>Owner Info</h3>
       <p><strong>Name:</strong> ${currentClient.owner}</p>
       <p><strong>Contact:</strong> ${currentClient.contact}</p>
       <p><strong>Address:</strong> ${currentClient.address}</p>
     `;
 
-    petInfoDiv.innerHTML = `
+    document.getElementById('petInfo').innerHTML = `
       <h3>Pet Info</h3>
       <p><strong>Name:</strong> ${currentPet.name}</p>
       <p><strong>Breed:</strong> ${currentPet.breed}</p>
@@ -141,7 +197,6 @@ window.addEventListener('DOMContentLoaded', () => {
       <p><strong>Gender:</strong> ${currentPet.gender || 'Unknown'}</p>
     `;
 
-    // Pre-fill age and weight if available
     document.getElementById('sessionAge').value = currentPet.age || '';
     document.getElementById('sessionWeight').value = currentPet.weight || '';
 
@@ -157,13 +212,16 @@ window.addEventListener('DOMContentLoaded', () => {
     const expressSelected = [...document.querySelectorAll('.sessionExpress:checked')].map(cb => cb.value);
 
     let price = 0;
-    if (pkg !== 'None') price += pricing[pkg][size] || 0;
-    price += pricing.Extras[matting] + pricing.Extras[tangling] + pricing.Extras[shedding];
-    expressSelected.forEach(service => price += pricing.ExpressServices[service] || 0);
+    if (pkg !== 'None' && pricingData.packages[pkg] && pricingData.packages[pkg][size]) {
+      price += pricingData.packages[pkg][size];
+    }
+    price += pricingData.extras.matting[matting] || 0;
+    price += pricingData.extras.tangling[tangling] || 0;
+    price += pricingData.extras.shedding[shedding] || 0;
+    expressSelected.forEach(service => price += pricingData.express[service] || 0);
 
     totalDisplay.textContent = price;
   }
-
   form?.addEventListener('submit', (e) => {
   e.preventDefault();
   const confirmed = confirm('Are you sure you want to save this session?');
@@ -200,9 +258,15 @@ const jobOrderNumber = getNextJobOrderNumber();
     }
 
     let price = 0;
-    if (pkg !== 'None') price += pricing[pkg][size] || 0;
-    price += pricing.Extras[matting] + pricing.Extras[tangling] + pricing.Extras[shedding];
-    expressSelected.forEach(service => price += pricing.ExpressServices[service] || 0);
+   if (pkg !== 'None' && pricingData.packages[pkg] && pricingData.packages[pkg][size]) {
+  price += pricingData.packages[pkg][size];
+}
+price += pricingData.extras.matting[matting] || 0;
+price += pricingData.extras.tangling[tangling] || 0;
+price += pricingData.extras.shedding[shedding] || 0;
+expressSelected.forEach(service => {
+  price += pricingData.express[service] || 0;
+});
 
    const newSession = {
   date,
@@ -232,10 +296,7 @@ const jobOrderNumber = getNextJobOrderNumber();
     currentPet.sessions.push(newSession);
     currentPet.totalSpent = (currentPet.totalSpent || 0) + price;
 
-    if (currentPet.sessions.length === 7 && !currentPet.redeemedFree) {
-      alert(`🎉 ${currentPet.name} is now eligible for 1 FREE grooming!`);
-      currentPet.redeemedFree = true;
-    }
+   
 
     // Update pet age and weight
     currentPet.age = age;

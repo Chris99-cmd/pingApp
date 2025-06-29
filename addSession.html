@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Add Grooming Session</title>
-  <link rel="stylesheet" href="topBar.css">
-  <link rel="stylesheet" href="addSession.css">
+  <link rel="stylesheet" href="css/topBar.css">
+  <link rel="stylesheet" href="css/addSession.css">
 </head>
 <body>
 <div id="topBarContainer"></div>
-
 
 <h1>Add Grooming Session</h1>
 <button id="toggleFormBtn">Toggle Session Form</button>
@@ -23,87 +22,54 @@
     <!-- JS-populated -->
   </div>
 </div>
+
 <div id="sessionFormContainer" class="form-section" style="display: none;">
   <form id="sessionForm">
     <label>Date: <input type="date" id="sessionDate" required></label>
 
     <label>Size:
-      <select id="sessionSize" required>
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-        <option>XL</option>
-        <option>XXL</option>
-      </select>
+      <select id="sessionSize" required></select>
     </label>
 
     <label>Package:
-      <select id="sessionPackage" required>
-        <option value="None">None</option>
-        <option value="Basic">Basic</option>
-        <option value="Deluxe">Deluxe</option>
-        <option value="Premium">Premium</option>
-      </select>
+      <select id="sessionPackage" required></select>
     </label>
 
     <fieldset>
-      <legend>Express Services (₱100 each)</legend>
+      <legend>Express Services</legend>
       <div class="express-group">
-        <label><input type="checkbox" class="sessionExpress" value="Bath and Blow Dry"> Bath and Blow Dry</label>
-        <label><input type="checkbox" class="sessionExpress" value="Claw Trimming"> Claw Trimming</label>
-        <label><input type="checkbox" class="sessionExpress" value="Ear Cleaning"> Ear Cleaning</label>
-        <label><input type="checkbox" class="sessionExpress" value="Genital Trimming"> Genital Trimming</label>
-        <label><input type="checkbox" class="sessionExpress" value="Paw Pad Trimming"> Paw Pad Trimming</label>
-        <label><input type="checkbox" class="sessionExpress" value="Teeth Cleaning"> Teeth Cleaning</label>
+        <!-- Express services inserted dynamically -->
       </div>
     </fieldset>
 
     <label>Matting:
-      <select id="sessionMatting">
-        <option>None</option>
-        <option>Mild</option>
-        <option>Moderate</option>
-        <option>Severe</option>
-        <option>Extreme</option>
-      </select>
+      <select id="sessionMatting"></select>
     </label>
 
     <label>Tangling:
-      <select id="sessionTangling">
-        <option>None</option>
-        <option>Mild</option>
-        <option>Moderate</option>
-        <option>Severe</option>
-        <option>Extreme</option>
-      </select>
+      <select id="sessionTangling"></select>
     </label>
 
     <label>Shedding:
-      <select id="sessionShedding">
-        <option>None</option>
-        <option>Mild</option>
-        <option>Moderate</option>
-        <option>Severe</option>
-        <option>Extreme</option>
-      </select>
+      <select id="sessionShedding"></select>
     </label>
 
     <fieldset>
       <legend>Vaccination</legend>
-      <label>AntiParvo: 
-        <input type="radio" name="parvo" value="yes"> Yes 
+      <label>AntiParvo:
+        <input type="radio" name="parvo" value="yes"> Yes
         <input type="radio" name="parvo" value="no"> No
       </label>
-      <label>Rabies: 
-        <input type="radio" name="rabies" value="yes"> Yes 
+      <label>Rabies:
+        <input type="radio" name="rabies" value="yes"> Yes
         <input type="radio" name="rabies" value="no"> No
       </label>
-      <label>Tick & Flea: 
-        <input type="radio" name="tickflea" value="yes"> Yes 
+      <label>Tick & Flea:
+        <input type="radio" name="tickflea" value="yes"> Yes
         <input type="radio" name="tickflea" value="no"> No
       </label>
-      <label>Deworming: 
-        <input type="radio" name="deworming" value="yes"> Yes 
+      <label>Deworming:
+        <input type="radio" name="deworming" value="yes"> Yes
         <input type="radio" name="deworming" value="no"> No
       </label>
     </fieldset>
@@ -119,8 +85,10 @@
     <label>Pre-Grooming Remarks: <input type="text" id="sessionPreRemarks"></label>
     <label>Post-Grooming Remarks: <input type="text" id="sessionPostRemarks"></label><br>
 
+    
+
     <p><strong>Total: ₱<span id="sessionTotal">0</span></strong></p>
-    <button type="button" id="printSessionBtn">🖨️ Print Session Summary</button><br>
+    <button type="button" id="printSessionBtn">🖸️ Print Session Summary</button><br>
     <button type="submit">Save Session</button>
   </form>
 </div>
@@ -128,6 +96,41 @@
 <h2 class="section-title">Session History</h2>
 <ul id="sessionHistoryList"></ul>
 
-<script src="addSession.js"></script>
+<script src="js/addSession.js"></script>
+
+<script>
+  function loadTopBar() {
+  const topBarContainer = document.getElementById('topBarContainer');
+  const topBarPath = path.join(__dirname, 'topBar.html');
+
+  fs.readFile(topBarPath, 'utf8', (err, data) => {
+    if (!err && topBarContainer) {
+      topBarContainer.innerHTML = data;
+      initTopBarEvents();
+    } else {
+      console.error('❌ Failed to load top bar:', err);
+    }
+  });
+}
+
+function initTopBarEvents() {
+  document.getElementById('dropdownToggle')?.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.toggle('show');
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  });
+
+  const name = localStorage.getItem('userName') || 'User';
+  document.getElementById('userName').textContent = name;
+}
+
+module.exports = { loadTopBar };
+window.addEventListener('DOMContentLoaded', () => {
+  loadTopBar();
+});
+</script>
 </body>
 </html>

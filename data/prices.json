@@ -1,0 +1,26 @@
+{
+  "Basic": {
+    "Small 0-5kg": 290,
+    "Medium 5-12kg": 390,
+    "Large 12-22kg": 490,
+    "XLarge 22-32Kg": 640
+  },
+  "Deluxe": {
+    "Small 0-5kg": 390,
+    "Medium 5-12kg": 490,
+    "Large 12-22kg": 590,
+    "XLarge 22-32Kg": 740
+  },
+  "Premium": {
+    "Small 0-5kg": 640,
+    "Medium 5-12kg": 740,
+    "Large 12-22kg": 840,
+    "XLarge 22-32Kg": 990
+  },
+  "Promo": {
+    "Small 0-5kg": 0,
+    "Medium 5-12kg": 0,
+    "Large 12-22kg": 0,
+    "XLarge 22-32Kg": 0
+  }
+}

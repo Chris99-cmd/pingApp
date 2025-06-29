@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const sessionPath = path.join(__dirname, 'sessionSummaries.json');
+const sessionPath = path.join(__dirname, './data/sessionSummaries.json');
 const groomerFilter = document.getElementById('groomerFilter');
 const dateFilter = document.getElementById('dateFilter');
 const sessionTableBody = document.getElementById('sessionTableBody');

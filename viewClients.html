@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>View Clients</title>
-  <link rel="stylesheet" href="viewClient.css">
-  <link rel="stylesheet" href="topBar.css">
+  <link rel="stylesheet" href="css/viewClient.css">
+  <link rel="stylesheet" href="css/topBar.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
   <style>
@@ -132,18 +132,38 @@
   <button id="exportBtn">Export</button>
 </div>
 
-  <script src="viewClient.js"></script>
-  <script>
-    const topBarHtml = fs.readFileSync(path.join(__dirname, 'topBar.html'), 'utf-8');
-    document.getElementById('topBarContainer').innerHTML = topBarHtml;
-  </script>
-  <script>
-    const { loadTopBar } = require('./topBar.js');
-    window.addEventListener('DOMContentLoaded', () => {
-      loadTopBar();
-    });
-  </script>
-  
+  <script src="js/viewClient.js"></script>
+  <script>function loadTopBar() {
+  const topBarContainer = document.getElementById('topBarContainer');
+  const topBarPath = path.join(__dirname, 'topBar.html');
 
+  fs.readFile(topBarPath, 'utf8', (err, data) => {
+    if (!err && topBarContainer) {
+      topBarContainer.innerHTML = data;
+      initTopBarEvents();
+    } else {
+      console.error('❌ Failed to load top bar:', err);
+    }
+  });
+}
+
+function initTopBarEvents() {
+  document.getElementById('dropdownToggle')?.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.toggle('show');
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  });
+
+  const name = localStorage.getItem('userName') || 'User';
+  document.getElementById('userName').textContent = name;
+}
+
+module.exports = { loadTopBar };
+window.addEventListener('DOMContentLoaded', () => {
+  loadTopBar();
+});</script>
 </body>
 </html>

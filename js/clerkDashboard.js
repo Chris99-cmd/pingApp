@@ -1,42 +1,42 @@
 window.addEventListener('DOMContentLoaded', () => {
   const fs = require('fs');
   const path = require('path');
-  const { loadTopBar } = require('./topBar.js');
   loadTopBar();
 
-  const clientsPath = path.join(__dirname, 'clients.json');
-  const summaryPath = path.join(__dirname, 'sessionSummaries.json');
-  const groomersPath = path.join(__dirname, 'groomers.json');
-  const jobOrderPath = path.join(__dirname, 'jobOrderCounter.json');
+  const clientsPath = path.join(__dirname, './data/clients.json');
+  const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
+  const groomersPath = path.join(__dirname, './data/groomers.json');
+  const jobOrderPath = path.join(__dirname, './data/jobOrderCounter.json');
 
-  const pricing = {
-    Basic: { Small: 290, Medium: 390, Large: 490, XL: 590, XXL: 690 },
-    Deluxe: { Small: 490, Medium: 590, Large: 690, XL: 790, XXL: 890 },
-    Premium: { Small: 690, Medium: 790, Large: 890, XL: 990, XXL: 1090 },
-    ExpressItems: 100,
-    Extras: {
-      None: 0,
-      Mild: 200,
-      Moderate: 350,
-      Severe: 550,
-      Extreme: 700
-    }
-  };
+  const sizesPath = path.join(__dirname, './data/sizes.json');
+  const packagesPath = path.join(__dirname, './data/packages.json');
+  const expressPath = path.join(__dirname, './data/express.json');
+  const mattingPath = path.join(__dirname, './data/matting.json');
+  const tanglingPath = path.join(__dirname, './data/tangling.json');
+  const sheddingPath = path.join(__dirname, './data/shedding.json');
+  const pricesPath = path.join(__dirname, './data/prices.json');
 
-  const expressOptions = [
-    'Bath and Blow Dry',
-    'Claw Trimming',
-    'Ear Cleaning',
-    'Genital Trimming',
-    'Paw Pad Trimming',
-    'Teeth Cleaning'
-  ];
+  let pricingData = { packages: {}, express: {}, extras: {} };
+  try {
+    pricingData.packages = JSON.parse(fs.readFileSync(pricesPath));
+    pricingData.express = JSON.parse(fs.readFileSync(expressPath)).reduce((acc, item) => {
+      acc[item.name] = item.price;
+      return acc;
+    }, {});
+    ['matting', 'tangling', 'shedding'].forEach(type => {
+      pricingData.extras[type] = {};
+      const filePath = path.join(__dirname, `./data/${type}.json`);
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath));
+        data.forEach(item => pricingData.extras[type][item.label] = item.price);
+      }
+    });
+  } catch (err) {
+    alert('Failed to load pricing data');
+    console.error(err);
+  }
 
   const petSections = document.getElementById('petSections');
-  const addPetBtn = document.getElementById('addPetBtn');
-  const loadClientBtn = document.getElementById('loadClientBtn');
-  const searchBarcodeInput = document.getElementById('searchBarcodeInput');
-  const goToClientListBtn = document.getElementById('goToClientListBtn');
   const totalDisplay = document.getElementById('dashboardTotal');
 
   function getGroomerOptions() {
@@ -57,44 +57,65 @@ window.addEventListener('DOMContentLoaded', () => {
     return counter;
   }
 
-function updateTotalDisplay() {
-  const petDivs = document.querySelectorAll('.pet-section');
-  let grandTotal = 0;
+  function updateTotalDisplay() {
+    const petDivs = document.querySelectorAll('.pet-section');
+    let grandTotal = 0;
+    petDivs.forEach(div => {
+      const size = div.querySelector('.pet-size').value;
+      const pkg = div.querySelector('.pet-package').value;
+      const matting = div.querySelector('.matting').value;
+      const tangling = div.querySelector('.tangling').value;
+      const shedding = div.querySelector('.shedding').value;
+      const expressSelected = [...div.querySelectorAll('.express-checkbox:checked')].map(cb => cb.value);
 
-  petDivs.forEach(div => {
-    const size = div.querySelector('.pet-size').value;
-    const pkg = div.querySelector('.pet-package').value;
-    const matting = div.querySelector('.matting').value;
-    const tangling = div.querySelector('.tangling').value;
-    const shedding = div.querySelector('.shedding').value;
-    const expressSelected = [...div.querySelectorAll('.express-checkbox:checked')].map(cb => cb.value);
+      let price = 0;
+     if (pkg !== 'None' && pricingData.packages?.[pkg]?.[size] != null) {
+  price += pricingData.packages[pkg][size];
+}
 
-    let price = 0;
-    if (pkg !== 'None') {
-      price += pricing[pkg][size] || 0;
-      price += pricing.Extras[matting] + pricing.Extras[tangling] + pricing.Extras[shedding];
+      price += pricingData.extras.matting[matting] || 0;
+      price += pricingData.extras.tangling[tangling] || 0;
+      price += pricingData.extras.shedding[shedding] || 0;
+
+      expressSelected.forEach(item => {
+        price += pricingData.express[item] || 0;
+      });
+
+      grandTotal += price;
+      const totalLabel = div.querySelector('.pet-total');
+      if (totalLabel) totalLabel.textContent = `Pet Total: ₱${price.toFixed(2)}`;
+    });
+    totalDisplay.textContent = grandTotal.toFixed(2);
+  }
+
+  function getOptions(filePath, labelKey = 'label') {
+  try {
+    const data = JSON.parse(fs.readFileSync(filePath));
+    if (Array.isArray(data) && typeof data[0] === 'string') {
+      return data; 
     }
-    price += expressSelected.length * pricing.ExpressItems;
-    grandTotal += price;
-
-    const totalLabel = div.querySelector('.pet-total');
-    if (totalLabel) totalLabel.textContent = `Pet Total: ₱${price.toFixed(2)}`;
-  });
-
-  totalDisplay.textContent = grandTotal.toFixed(2);
+    return data.map(d => d[labelKey]);
+  } catch (_) {
+    return [];
+  }
 }
 
 
   function addPetSection() {
     const groomers = getGroomerOptions();
     const jobOrder = getNextJobOrderNumber();
+    const sizes = getOptions(sizesPath);
+    const packages = getOptions(packagesPath); 
+    const express = Object.keys(pricingData.express);
+    const severityLevels = getOptions(mattingPath);
+
     const section = document.createElement('div');
     section.className = 'pet-section';
     section.setAttribute('data-joborder', jobOrder);
-    section.innerHTML =`
+    section.innerHTML = `
       <label>Pet Name: <input type="text" class="pet-name" required></label><br>
       <label>Breed: <input type="text" class="pet-breed" required></label><br>
-      <label>Age: <input type="number" class="pet-age" min="0"></label><br>
+      <label>Age (months): <input type="number" class="pet-age" min="0"></label><br>
       <label>Gender:
         <select class="pet-gender">
           <option value="Male">Male</option>
@@ -111,32 +132,40 @@ function updateTotalDisplay() {
       </label><br>
       <label>Size:
         <select class="pet-size">
-          <option>Small</option><option>Medium</option><option>Large</option><option>XL</option><option>XXL</option>
+          ${sizes.map(s => `<option>${s}</option>`).join('')}
         </select>
       </label><br>
-      <label>Package Availed:
-        <select class="pet-package">
-          <option>None</option><option>Basic</option><option>Deluxe</option><option>Premium</option>
-        </select>
-      </label><br>
-     <fieldset class="express-group">
-  <legend>Express Services:</legend>
-  <div class="express-checkboxes">
-    ${expressOptions.map(opt => `
-      <label>
-        <input type="checkbox" class="express-checkbox" value="${opt}"> ${opt}
-      </label>
-    `).join('')}
-  </div>
-</fieldset>
+     <label>Package Availed:
+  <select class="pet-package">
+    <option>None</option>
+    ${packages.map(p => `<option>${p}</option>`).join('')}
+  </select>
+</label><br>
+      <fieldset class="express-group">
+        <legend>Express Services:</legend>
+        <div class="express-checkboxes">
+          ${express.map(opt => `
+            <label><input type="checkbox" class="express-checkbox" value="${opt}"> ${opt}</label>
+          `).join('')}
+        </div>
+      </fieldset>
       <label>Matting:
-        <select class="matting"><option>None</option><option>Mild</option><option>Moderate</option><option>Severe</option><option>Extreme</option></select>
+        <select class="matting">
+          <option>None</option>
+          ${severityLevels.map(l => `<option>${l}</option>`).join('')}
+        </select>
       </label>
       <label>Tangling:
-        <select class="tangling"><option>None</option><option>Mild</option><option>Moderate</option><option>Severe</option><option>Extreme</option></select>
+        <select class="tangling">
+          <option>None</option>
+          ${severityLevels.map(l => `<option>${l}</option>`).join('')}
+        </select>
       </label>
       <label>Shedding:
-        <select class="shedding"><option>None</option><option>Mild</option><option>Moderate</option><option>Severe</option><option>Extreme</option></select>
+        <select class="shedding">
+          <option>None</option>
+          ${severityLevels.map(l => `<option>${l}</option>`).join('')}
+        </select>
       </label><br>
       <fieldset><legend>Vaccination Details:</legend>
         <label>AntiParvo Vaccine: <select class="vac-parvo"><option>Yes</option><option>No</option></select></label><br>
@@ -253,11 +282,14 @@ function updateTotalDisplay() {
 
       let price = 0;
       if (pkg !== 'None') {
-        price += pricing[pkg][size] || 0;
-        price += pricing.Extras[matting] + pricing.Extras[tangling] + pricing.Extras[shedding];
-      }
-      price += expressSelected.length * pricing.ExpressItems;
-      total += price;
+  price += pricingData.packages[pkg]?.[size] || 0;
+  price += (pricingData.extras.matting[matting] || 0);
+  price += (pricingData.extras.tangling[tangling] || 0);
+  price += (pricingData.extras.shedding[shedding] || 0);
+}
+expressSelected.forEach(service => {
+  price += pricingData.express[service] || 0;
+});
 
       return {
         name, size, pkg, expressSelected, matting, tangling, shedding, groomer, pre, post,
@@ -336,7 +368,7 @@ function updateTotalDisplay() {
     fs.writeFileSync(summaryPath, JSON.stringify(summaries, null, 2));
 
     updateTotalDisplay();
-    alert(`Client and session saved!\nTotal: ₱${total}`);
+    alert(`Client and session saved!`);
     location.reload();
   });
 

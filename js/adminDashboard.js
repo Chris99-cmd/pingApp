@@ -1,8 +1,8 @@
 const fs = require('fs');
     const path = require('path');
-    const summaryPath = path.join(__dirname, 'sessionSummaries.json');
-    const groomersPath = path.join(__dirname, 'groomers.json');
-    const clerksPath = path.join(__dirname, 'clerks.json');
+    const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
+    const groomersPath = path.join(__dirname, './data/groomers.json');
+    const clerksPath = path.join(__dirname, './data/clerks.json');
     const totalSessionsEl = document.getElementById('totalSessions');
     const totalRevenueEl = document.getElementById('totalRevenue');
     const groomerFilter = document.getElementById('groomerFilter');

@@ -1,0 +1,168 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #121212;
+  color: #f1f1f1;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h2 {
+  margin-top: 40px;
+  margin-bottom: 10px;
+  color: #ffa726;
+  border-bottom: 1px solid #ffa726;
+  padding-bottom: 6px;
+}
+
+button {
+  padding: 8px 16px;
+  margin: 10px 6px 20px 0;
+  border: none;
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: 1px solid #333;
+  border-radius: 0;
+  display: inline-block;
+}
+
+button:hover {
+  background-color: #2c2c2c;
+}
+
+.package-box,
+.size-box,
+.express-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1e1e1e;
+  border: 1px solid #333;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 0;
+}
+
+input[type="number"],
+input[type="text"] {
+  padding: 8px;
+  margin-left: 10px;
+  border: 1px solid #555;
+  background-color: #1a1a1a;
+  color: #f1f1f1;
+  font-family: inherit;
+  border-radius: 0;
+}
+
+input[type="number"] {
+  width: 90px;
+}
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: #1a1a1a;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.price-table th,
+.price-table td {
+  border: 1px solid #333;
+  padding: 10px;
+  text-align: center;
+}
+
+.price-table th {
+  background-color: #2b2b2b;
+  color: #ffa726;
+}
+
+label {
+  display: inline-block;
+  margin-right: 8px;
+  color: #ddd;
+}
+
+hr {
+  margin: 30px 0;
+  border: none;
+  border-top: 1px solid #ffa726;
+}
+
+.section-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.section-group > div {
+  flex: 1 1 30%;
+  background: #1e1e1e;
+  padding: 20px;
+  border: 1px solid #333;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  min-width: 280px;
+  border-radius: 0;
+}
+
+.section-group > div h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: #ffa726;
+}
+
+.section-group > div button {
+  margin-top: 10px;
+  width: 100%;
+  border-radius: 0;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.75);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  padding: 24px;
+  min-width: 320px;
+  border: 1px solid #333;
+  text-align: center;
+  border-radius: 0;
+}
+
+.modal-content input {
+  width: 90%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #555;
+  background-color: #121212;
+  color: #f1f1f1;
+  border-radius: 0;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}

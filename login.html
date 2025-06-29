@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>BNTT Login</title>
-  <link rel="stylesheet" href="login.css" />
+  <link rel="stylesheet" href="css/login.css" />
 </head>
 
 <body>
@@ -23,7 +23,7 @@
     const fs = require('fs');
     const path = require('path');
     const form = document.getElementById('loginForm');
-    const usersPath = path.join(__dirname, 'users.json');
+    const usersPath = path.join(__dirname, './data/users.json');
 
     form.addEventListener('submit', (e) => {
       e.preventDefault();
