@@ -19,7 +19,7 @@ function createWindow() {
   // ✅ Enable @electron/remote for this window
   require('@electron/remote/main').enable(win.webContents);
 
-  const usersPath = path.join(__dirname, 'users.json');
+  const usersPath = path.join(__dirname, 'data/users.json');
   const users = fs.existsSync(usersPath) ? JSON.parse(fs.readFileSync(usersPath)) : [];
 
   if (users.length === 0) {

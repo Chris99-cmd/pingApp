@@ -217,6 +217,8 @@ window.addEventListener('DOMContentLoaded', () => {
   loadGroomers();
   loadClients();
   applyFilters();
+
+  
 });
 
 document.getElementById('clientSearchInput')?.addEventListener('input', function () {
@@ -419,4 +421,35 @@ if (response === 0) {
 
 });
 
+
+window.addEventListener('DOMContentLoaded', () => {
+  const adminPassword = "password"; // Change this if needed
+
+  const backBtn = document.getElementById('backToDashboardBtn');
+  const modal = document.getElementById('adminPromptModal');
+  const input = document.getElementById('adminPasswordInput');
+  const confirmBtn = document.getElementById('confirmAdminBtn');
+  const cancelBtn = document.getElementById('cancelAdminBtn');
+
+  if (backBtn && modal && input && confirmBtn && cancelBtn) {
+    backBtn.addEventListener('click', () => {
+      input.value = '';
+      modal.style.display = 'flex';
+      input.focus();
+    });
+
+    confirmBtn.addEventListener('click', () => {
+      if (input.value === adminPassword) {
+        window.location.href = 'adminDashboard.html';
+      } else {
+        alert("❌ Incorrect password. Access denied.");
+        modal.style.display = 'none';
+      }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+      modal.style.display = 'none';
+    });
+  }
+});
 

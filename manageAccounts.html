@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Manage Accounts</title>
+  <link rel="stylesheet" href="css/adminDashboard.css">
+ <style>
+  .account-management {
+    margin: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #333;
+    color: white;
+  }
+
+  td button {
+    margin-right: 5px;
+  }
+
+  .password-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 160px;
+  }
+
+  .eye-icon {
+    cursor: pointer;
+    margin-left: 12px;
+    font-size: 1rem;
+  }
+
+  .password-wrapper span.password {
+    font-family: monospace;
+    letter-spacing: 2px;
+  }
+</style>
+
+</head>
+<body>
+  <div class="topbar">
+    <div class="left" onclick="location.href='adminDashboard.html'">
+      <img src="assets/bnttlogo_3.png" alt="Logo">
+      <h1>Bontot Pet Grooming</h1>
+    </div>
+  </div>
+
+  <div class="account-management">
+    <h2>Account Management</h2>
+    <button onclick="window.location.href='registerAdmin.html'">➕ Register Admin</button>
+    <button onclick="window.location.href='registerClerk.html'">➕ Register User</button>
+
+    <h3 style="margin-top: 2rem;">Registered Accounts</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Password</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+  </div>
+
+  <button onclick="window.location.href='adminDashboard.html'">⬅ Back to Dashboard</button>
+
+  <script>
+    const fs = require('fs');
+    const path = require('path');
+    const usersPath = path.join(__dirname, 'data/users.json');
+
+    function loadUsers() {
+      const table = document.getElementById('userList');
+      table.innerHTML = '';
+
+      if (!fs.existsSync(usersPath)) return;
+
+      const users = JSON.parse(fs.readFileSync(usersPath));
+      users.forEach((user, index) => {
+        const row = document.createElement('tr');
+
+       row.innerHTML = `
+  <td>${user.username}</td>
+  <td>
+    <div class="password-wrapper">
+      <span class="password" id="pass-${index}">******</span>
+      <span class="eye-icon" onclick="togglePassword(${index}, '${user.password}')">👁</span>
+    </div>
+  </td>
+  <td>${user.role}</td>
+  <td>
+    <button onclick="confirmDelete(${index})">🗑️ Delete</button>
+  </td>
+`;
+
+
+        table.appendChild(row);
+      });
+    }
+
+    function togglePassword(index, actualPassword) {
+      const span = document.getElementById(`pass-${index}`);
+      const isMasked = span.textContent.includes('*');
+      span.textContent = isMasked ? actualPassword : '******';
+
+      const eye = span.nextElementSibling;
+      eye.textContent = isMasked ? '🙈' : '👁';
+    }
+
+    function confirmDelete(index) {
+      const confirmed = confirm("❗ Are you sure you want to delete this account?");
+      if (confirmed) deleteUser(index);
+    }
+
+    function deleteUser(index) {
+      const users = JSON.parse(fs.readFileSync(usersPath));
+      users.splice(index, 1);
+      fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+      loadUsers();
+    }
+
+    function editUser(index) {
+      const users = JSON.parse(fs.readFileSync(usersPath));
+      const user = users[index];
+      const newUsername = prompt("📝 Enter new username:", user.username);
+      const newPassword = prompt("🔐 Enter new password:", user.password);
+      if (newUsername && newPassword) {
+        users[index].username = newUsername;
+        users[index].password = newPassword;
+        fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+        loadUsers();
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadUsers);
+  </script>
+</body>
+</html>

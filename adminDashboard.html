@@ -27,7 +27,6 @@
     <label>Filter by Date:</label>
     <select id="dateFilter"><option value="all">All</option></select>
 
-    <button onclick="exportCSV()">📤 Export Report</button>
   </div>
 
   <div class="summary">
@@ -35,23 +34,26 @@
     <p><strong>Total Revenue:</strong> ₱<span id="totalRevenue">0.00</span></p>
   </div>
 
-  <div class="charts">
-    <div class="chart-block">
+<div class="charts">
+  <div class="chart-block line-chart">
+    <div class="chart-scroll">
       <canvas id="salesChart" height="200"></canvas>
-      <div class="legend">📈 Session Trends: Jun 27 - Highest, Jun 28 - Average, Jun 29 - Lowest</div>
     </div>
-    <div class="chart-block">
-      <div id="googlePieChart" style="width: 550px; height: 385px;"></div>
-      <div class="legend">
-        🟡 Premium - 16 avails<br>
-        🔵 Basic - 10 avails<br>
-        🟠 Deluxe - 5 avails
-      </div>
-    </div>
+    <div class="legend">📈 Session Trends</div>
   </div>
 
-  <button onclick="window.location.href='registerClerk.html'">➕ Register Clerk</button>
-  <button onclick="window.location.href='adminSessionSummary.html'">📋 View Grooming Session Summaries</button>
+  <div class="chart-block pie-chart">
+    <div id="googlePieChart"></div>
+    <div class="legend">
+      📊 Package | Size | Analogy
+    </div>
+  </div>
+</div>
+
+
+   
+ <button onclick="window.location.href='manageAccounts.html'">👥 Manage Accounts</button>
+  <button onclick="window.location.href='viewClients.html'">📋 View Grooming Session Summaries</button>
   <button onclick="window.location.href='pricesAndPackages.html'">💲 Manage Prices & Packages</button>
 
   <div class="groomer-section">

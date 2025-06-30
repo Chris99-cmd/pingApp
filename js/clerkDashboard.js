@@ -488,6 +488,11 @@ document.getElementById('printSummaryBtn')?.addEventListener('click', () => {
         @media print {
           body { margin: 0; }
         }
+          @page {
+  size: A4;
+  margin: 20mm;
+}
+
       </style>
     </head>
     <body>

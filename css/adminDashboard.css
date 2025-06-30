@@ -1,154 +1,170 @@
 body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #121212;
-      color: #fff;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #1f1f1f;
-      padding: 10px 20px;
-      box-shadow: 0 0 10px #000;
-    }
-
-    .topbar .left {
-      display: flex;
-      align-items: center;
-    }
-
-    .topbar img {
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .topbar h1 {
-      font-size: 20px;
-      color: #ffffff;
-      cursor: pointer;
-    }
-
-    .topbar .right {
-      position: relative;
-    }
-
-    .topbar .username {
-      cursor: pointer;
-      background: none;
-      color: #fff;
-      border: none;
-      font-size: 16px;
-    }
-
-    .dropdown {
-      display: none;
-      position: absolute;
-      right: 0;
-      background: #2c2c2c;
-      border: 1px solid #444;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .dropdown button {
-      padding: 10px 20px;
-      width: 100%;
-      background: none;
-      border: none;
-      color: #fff;
-      text-align: left;
-    }
-
-    .dropdown button:hover {
-      background-color: #444;
-    }
-
-    .filters, .summary, .charts, .groomer-section {
-      padding: 20px;
-    }
-
-    select, input, button {
-      padding: 10px;
-      margin: 5px;
-      background-color: #1f1f1f;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 5px;
-    }
-
-    canvas {
-      background-color: #1f1f1f;
-      border-radius: 10px;
-      padding: 10px;
-    }
-
-    .charts {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .chart-block {
-      flex: 1;
-      min-width: 300px;
-    }
-
-
-    .legend {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #bbb;
-    }
-
-    .groomer-section {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-    }
-
-    .groomer-list li {
-      margin: 5px 0;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .groomer-list button {
-      background-color: #d32f2f;
-      color: #fff;
-      border: none;
-      border-radius: 3px;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-
-    .groomer-list button:hover {
-      background-color: #b71c1c;
-    }
-    #googlePieChart {
-  width: 100%;
-  height: 500px;
-  background-color: #1f1f1f;
-  border-radius: 10px;
-  padding: 10px;
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
 }
 
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1c1c1c;
+  padding: 12px 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
 
-.clerk-section {
-  background: #1a1a1a;
+.topbar .left {
+  display: flex;
+  align-items: center;
+}
+
+.topbar img {
+  height: 42px;
+  margin-right: 12px;
+}
+
+.topbar h1 {
+  font-size: 22px;
+  color: #d1d1d1;
+  cursor: pointer;
+}
+
+.topbar .right {
+  position: relative;
+}
+
+.topbar .username {
+  cursor: pointer;
+  background: none;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  padding: 6px 10px;
+}
+
+.dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: #262626;
   border: 1px solid #333;
-  border-radius: 10px;
-  padding: 20px;
-  margin-top: 20px;
+  border-radius: 6px;
+  overflow: hidden;
+  z-index: 100;
 }
 
+.dropdown button {
+  padding: 10px 20px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #f0f0f0;
+  text-align: left;
+}
+
+.dropdown button:hover {
+  background-color: #333;
+}
+
+.filters,
+.summary,
+.charts,
+.groomer-section,
+.clerk-section {
+  padding: 20px;
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  margin: 20px;
+  border: 1px solid #2a2a2a;
+}
+
+select,
+input,
+button {
+  padding: 10px;
+  margin: 5px;
+  background-color: #1f1f1f;
+  border: 1px solid #444;
+  color: #fff;
+  border-radius: 5px;
+}
+
+button {
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #333;
+}
+
+canvas {
+  background-color: #242424;
+  image-rendering: crisp-edges;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+.charts {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.chart-block {
+  flex-grow: 1;
+  min-width: 300px;
+}
+
+.chart-block.pie-chart {
+  flex: 1;
+}
+
+.chart-block.line-chart {
+  flex: 2;
+  overflow: hidden;
+}
+
+.chart-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.chart-scroll canvas {
+  width: 1600px; /* or dynamic based on days */
+  height: 550px;
+}
+
+
+.legend {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #bbb;
+  line-height: 1.6;
+  text-align: center;
+}
+
+
+#groomerList,
+#clerkList {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.groomer-list li,
 .clerk-list li {
   margin: 5px 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: #1e1e1e;
+  border-radius: 5px;
 }
 
+.groomer-list button,
 .clerk-list button {
   background-color: #d32f2f;
   color: #fff;
@@ -158,6 +174,13 @@ body {
   cursor: pointer;
 }
 
+.groomer-list button:hover,
 .clerk-list button:hover {
   background-color: #b71c1c;
+}
+
+#googlePieChart {
+  width: 101%;
+  height: 400px;
+  border-radius: 10px;
 }

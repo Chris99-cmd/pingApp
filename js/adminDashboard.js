@@ -3,6 +3,8 @@ const fs = require('fs');
     const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
     const groomersPath = path.join(__dirname, './data/groomers.json');
     const clerksPath = path.join(__dirname, './data/clerks.json');
+    const packagesPath = path.join(__dirname, './data/packages.json');
+
     const totalSessionsEl = document.getElementById('totalSessions');
     const totalRevenueEl = document.getElementById('totalRevenue');
     const groomerFilter = document.getElementById('groomerFilter');
@@ -29,45 +31,60 @@ const fs = require('fs');
   loadClerks(); 
     }
 
-    function populateFilters(data) {
-      const groomers = [...new Set(data.map(s => s.groomer))];
-      const dates = [...new Set(data.map(s => s.date))];
+function populateFilters(data) {
+  // Clear existing options first (except the "All" option)
+  groomerFilter.innerHTML = '<option value="all">All</option>';
+  dateFilter.innerHTML = '<option value="all">All</option>';
 
-      groomers.forEach(g => {
-        const option = document.createElement('option');
-        option.value = g;
-        option.textContent = g;
-        groomerFilter.appendChild(option);
-      });
+  const groomers = [...new Set(data.map(s => s.groomer))];
+  const months = [...new Set(data.map(s => {
+    const date = new Date(s.date || s.createdAt);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`; // "2025-06"
+  }))];
 
-      dates.forEach(d => {
-        const option = document.createElement('option');
-        option.value = d;
-        option.textContent = d;
-        dateFilter.appendChild(option);
-      });
+  groomers.forEach(g => {
+    const option = document.createElement('option');
+    option.value = g;
+    option.textContent = g;
+    groomerFilter.appendChild(option);
+  });
 
-      groomerFilter.addEventListener('change', applyFilters);
-      dateFilter.addEventListener('change', applyFilters);
-    }
+  months.sort().forEach(m => {
+    const option = document.createElement('option');
+    option.value = m;
+    const label = new Date(`${m}-01`).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }); // e.g. "June 2025"
+    option.textContent = label;
+    dateFilter.appendChild(option);
+  });
+
+  groomerFilter.addEventListener('change', applyFilters);
+  dateFilter.addEventListener('change', applyFilters);
+}
+
+
 
     function applyFilters() {
-      let filtered = allSessions;
+  let filtered = allSessions;
 
-      const selectedGroomer = groomerFilter.value;
-      const selectedDate = dateFilter.value;
+  const selectedGroomer = groomerFilter.value;
+  const selectedMonth = dateFilter.value;
 
-      if (selectedGroomer !== 'all') {
-        filtered = filtered.filter(s => s.groomer === selectedGroomer);
-      }
+  if (selectedGroomer !== 'all') {
+    filtered = filtered.filter(s => s.groomer === selectedGroomer);
+  }
 
-      if (selectedDate !== 'all') {
-        filtered = filtered.filter(s => s.date === selectedDate);
-      }
+  if (selectedMonth !== 'all') {
+    filtered = filtered.filter(s => {
+      const d = new Date(s.date || s.createdAt);
+      const m = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      return m === selectedMonth;
+    });
+  }
 
-      updateSummary(filtered);
-      drawLineChart(filtered);
-    }
+  updateSummary(filtered);
+  drawLineChart(filtered); // <- This uses your updated daily logic
+  drawGooglePie(filtered); // <- Keep this too!
+}
 
     function updateSummary(data) {
       let total = 0;
@@ -77,65 +94,134 @@ const fs = require('fs');
     }
 
 function drawLineChart(data) {
-  const totalsByDay = {};
+  const now = new Date();
+  const selectedMonth = dateFilter.value !== 'all'
+    ? new Date(dateFilter.value)
+    : new Date(now.getFullYear(), now.getMonth());
 
+  const year = selectedMonth.getFullYear();
+  const month = selectedMonth.getMonth();
+
+  // Generate all dates of selected month
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const labels = Array.from({ length: daysInMonth }, (_, i) => {
+    const date = new Date(year, month, i + 1);
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); // e.g. "Jun 1"
+  });
+
+  // Initialize zero counts for each day
+  const dailyTotals = {};
+  labels.forEach(label => dailyTotals[label] = 0);
+
+  // Sum totals per day
   data.forEach(entry => {
-    const rawDate = entry.date;
-    const dateObj = new Date(rawDate);
-
-    if (!isNaN(dateObj)) {
-      const label = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }); // e.g. "Jun 27"
-      totalsByDay[label] = (totalsByDay[label] || 0) + entry.total;
+    const entryDate = new Date(entry.date || entry.createdAt);
+    if (entryDate.getFullYear() === year && entryDate.getMonth() === month) {
+      const label = entryDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      dailyTotals[label] = (dailyTotals[label] || 0) + (entry.total || 0);
     }
   });
 
-  const labels = Object.keys(totalsByDay);
-  const chartData = Object.values(totalsByDay);
+  const chartLabels = Object.keys(dailyTotals);
+  const chartData = Object.values(dailyTotals);
 
   if (window.barChart) window.barChart.destroy();
 
-  window.barChart = new Chart(document.getElementById('salesChart'), {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Sessions by Day',
-        data: chartData,
-        borderColor: '#ffa726',
-        backgroundColor: 'rgba(255, 167, 38, 0.2)',
-        tension: 0.4,
-        fill: true,
-        pointBackgroundColor: '#ffa726',
-        pointRadius: 4
-      }]
+
+const canvas = document.getElementById('salesChart');
+canvas.width = labels.length * 50;
+canvas.height = 500; // or 60 for wider spacing
+
+ window.barChart = new Chart(document.getElementById('salesChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [{
+      label: 'Sessions by Day',
+      data: chartData,
+      borderColor: '#ffa726',
+      backgroundColor: 'rgba(255, 167, 38, 0.2)',
+      tension: 0.4,
+      fill: true,
+      pointBackgroundColor: '#ffa726',
+      pointRadius: 4
+    }]
+  },
+ options: {
+  responsive: false,  // Let canvas width dictate layout
+  maintainAspectRatio: false,
+  layout: {
+    padding: {
+      top: 30,
+      bottom: 20,
+      left: 20,
+      right: 20
+    }
+  },
+  scales: {
+    x: {
+      ticks: {
+        autoSkip: false,
+        maxRotation: 0,
+        minRotation: 0,
+        align: 'start'
+      },
+      grid: {
+        drawOnChartArea: true
+      }
     },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true }
+    y: {
+      beginAtZero: true,
+      grid: {
+        drawOnChartArea: true
       }
     }
-  });
+  }
+}
 
-  // Below the chart – show just the day numbers
+});
+
   const dayContainer = document.getElementById('dayList');
   if (dayContainer) {
-    const dayNumbers = labels.map(l => l.split(' ')[1]); // get day from "Jun 27"
+    const dayNumbers = chartLabels.map(l => l.split(' ')[1]);
     dayContainer.innerHTML = `<strong>Days:</strong><br>` + dayNumbers.join('  ');
   }
 }
 
 
-google.charts.load('current', { packages: ['corechart'] });
-google.charts.setOnLoadCallback(drawGooglePie);
 
-function drawGooglePie() {
-  const data = google.visualization.arrayToDataTable([
-    ['Package', 'Avails'],
-    ['Basic', 10],
-    ['Premium', 16],
-    ['Deluxe', 5]
-  ]);
+google.charts.load('current', { packages: ['corechart'] });
+google.charts.setOnLoadCallback(() => {
+  loadDashboard(); // ensures sessions are loaded first
+  drawGooglePie(); // then draw chart from loaded data
+});
+
+
+function drawGooglePie(data = allSessions) {
+  if (!fs.existsSync(packagesPath)) return;
+
+  const availablePackages = JSON.parse(fs.readFileSync(packagesPath));
+  const packageCounts = {};
+
+  availablePackages.forEach(pkg => {
+    packageCounts[pkg] = 0;
+  });
+
+  data.forEach(session => {
+    const pkg = session.package;
+    if (packageCounts.hasOwnProperty(pkg)) {
+      packageCounts[pkg]++;
+    }
+  });
+
+  const pieData = [['Package', 'Avails']];
+  for (let pkg in packageCounts) {
+    pieData.push([pkg, packageCounts[pkg]]);
+  }
+
+  console.log('📊 Pie Chart Data:', pieData);
+
+  const dataTable = google.visualization.arrayToDataTable(pieData);
 
   const options = {
     title: 'Package Usage',
@@ -147,10 +233,8 @@ function drawGooglePie() {
   };
 
   const chart = new google.visualization.PieChart(document.getElementById('googlePieChart'));
-  chart.draw(data, options);
+  chart.draw(dataTable, options);
 }
-
-
 
     function exportCSV() {
       const headers = ['Date', 'Owner', 'Pet Name', 'Package', 'Total', 'Groomer'];
@@ -177,24 +261,26 @@ function drawGooglePie() {
     }
 
     function loadGroomers() {
-      const groomerList = document.getElementById('groomerList');
-      groomerList.innerHTML = '';
-      if (!fs.existsSync(groomersPath)) return;
-      const groomers = JSON.parse(fs.readFileSync(groomersPath));
-      groomers.forEach((groomer, index) => {
-        const li = document.createElement('li');
-        li.textContent = `${groomer.firstName} ${groomer.lastName}`;
-        const delBtn = document.createElement('button');
-        delBtn.textContent = '🗑';
-        delBtn.onclick = () => {
-          groomers.splice(index, 1);
-          fs.writeFileSync(groomersPath, JSON.stringify(groomers, null, 2));
-          loadGroomers();
-        };
-        li.appendChild(delBtn);
-        groomerList.appendChild(li);
-      });
-    }
+  const groomerList = document.getElementById('groomerList');
+  groomerList.innerHTML = '';
+  if (!fs.existsSync(groomersPath)) return;
+  const groomers = JSON.parse(fs.readFileSync(groomersPath));
+  groomers.forEach((groomer, index) => {
+    const li = document.createElement('li');
+    li.textContent = `${groomer.firstName} ${groomer.lastName}`;
+    const delBtn = document.createElement('button');
+    delBtn.textContent = '🗑';
+    delBtn.onclick = () => {
+      const confirmed = confirm(`❗ Are you sure you want to delete ${groomer.firstName} ${groomer.lastName}?`);
+      if (!confirmed) return;
+      groomers.splice(index, 1);
+      fs.writeFileSync(groomersPath, JSON.stringify(groomers, null, 2));
+      loadGroomers();
+    };
+    li.appendChild(delBtn);
+    groomerList.appendChild(li);
+  });
+}
 
     function addGroomer() {
       const firstName = document.getElementById('firstName').value.trim();
@@ -219,6 +305,8 @@ function drawGooglePie() {
     const delBtn = document.createElement('button');
     delBtn.textContent = '🗑';
     delBtn.onclick = () => {
+      const confirmed = confirm(`❗ Are you sure you want to delete ${clerk.firstName} ${clerk.lastName}?`);
+      if (!confirmed) return;
       clerks.splice(index, 1);
       fs.writeFileSync(clerksPath, JSON.stringify(clerks, null, 2));
       loadClerks();
@@ -227,6 +315,7 @@ function drawGooglePie() {
     clerkList.appendChild(li);
   });
 }
+
 
 function addClerk() {
   const firstName = document.getElementById('clerkFirstName').value.trim();

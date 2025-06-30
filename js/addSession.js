@@ -487,6 +487,11 @@ document.getElementById('printSessionBtn').addEventListener('click', () => {
               margin: 0;
             }
           }
+            @page {
+  size: A4;
+  margin: 20mm;
+}
+
         </style>
       </head>
       <body>

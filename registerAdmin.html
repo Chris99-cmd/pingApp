@@ -2,42 +2,178 @@
 <html>
 <head>
   <title>Register Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #ff9100;
+    }
+
+    form {
+      background-color: #1e1e1e;
+      padding: 25px 30px;
+      border: 1px solid #333;
+      box-shadow: 0 0 4px rgba(255, 165, 0, 0.1);
+      border-radius: 0;
+      width: 300px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #ccc;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      background-color: #2a2a2a;
+      border: none;
+      color: #fff;
+      border-bottom: 1px solid #555;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 15px;
+      background-color: #ffffff;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 0;
+    }
+
+    button:hover {
+      background-color: #5e5e5e;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      background-color: transparent;
+      color: #fdfdfd;
+      border: 1px solid #ffffff;
+      width: auto;
+    }
+
+    .back-btn:hover {
+      background-color: #747373;
+      color: #000;
+    }
+  </style>
 </head>
 <body>
   <h2>Register Admin</h2>
   <form id="adminForm">
-    <label>Username:</label><br />
-    <input type="text" id="username" required /><br />
-    <label>Password:</label><br />
-    <input type="password" id="password" required /><br />
-    <label>Confirm Password:</label><br />
-    <input type="password" id="confirmPassword" required /><br /><br />
-    <button type="submit">Create Admin</button>
-  </form>
+  <label>Username:</label>
+  <input type="text" id="username" required />
 
-  <script>
-    const fs = require('fs');
-    const path = require('path');
-    const form = document.getElementById('adminForm');
-    const usersPath = path.join(__dirname, 'users.json');
+<label>Password:</label>
+<div style="position: relative;">
+  <input type="password" id="password" required style="width: 100%; padding-right: 30px;" />
+  <span
+    class="toggle-eye"
+    data-target="password"
+    style="
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+    ">👁</span>
+</div>
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+<label>Confirm Password:</label>
+<div style="position: relative;">
+  <input type="password" id="confirmPassword" required style="width: 100%; padding-right: 30px;" />
+  <span
+    class="toggle-eye"
+    data-target="confirmPassword"
+    style="
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 14px;
+    ">👁</span>
+</div>
 
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-      const confirmPassword = document.getElementById('confirmPassword').value;
 
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
+  <button type="submit">Create Admin</button>
+</form>
+
+  <button class="back-btn" onclick="window.location.href='adminDashboard.html'">⬅ Back to Dashboard</button>
+
+ <script>
+  const fs = require('fs');
+  const path = require('path');
+  const form = document.getElementById('adminForm');
+  const usersPath = path.join(__dirname, 'data/users.json');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+      alert("❌ Passwords do not match!");
+      return;
+    }
+
+    let users = [];
+    if (fs.existsSync(usersPath)) {
+      users = JSON.parse(fs.readFileSync(usersPath));
+    }
+
+    const exists = users.some(u => u.username === username);
+    if (exists) {
+      alert("❌ That username already exists.");
+      return;
+    }
+
+    users.push({ username, password, role: 'admin' });
+
+    fs.writeFileSync(usersPath, JSON.stringify(users, null, 2));
+    alert('✅ Admin registered! Redirecting to login...');
+    window.location = 'login.html';
+  });
+</script>
+<script>
+  // Eye toggle logic
+  document.querySelectorAll('.toggle-eye').forEach(icon => {
+    icon.addEventListener('click', () => {
+      const targetId = icon.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        icon.textContent = '👁';
       }
-
-      const userData = [{ username, password, role: 'admin' }];
-      fs.writeFileSync(usersPath, JSON.stringify(userData, null, 2));
-      alert('Admin created! Redirecting to login...');
-      window.location = 'login.html';
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
