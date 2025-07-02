@@ -43,20 +43,11 @@
     <label>Package:
       <select id="filterPackage">
         <option value="">All</option>
-        <option>None</option>
-        <option>Basic</option>
-        <option>Deluxe</option>
-        <option>Premium</option>
       </select>
     </label>
     <label>Size:
       <select id="filterSize">
         <option value="">All</option>
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-        <option>XL</option>
-        <option>XXL</option>
       </select>
     </label>
     <div style="align-self: flex-end;">
@@ -65,14 +56,18 @@
     </div>
   </div>
 
-  <div id="clientSearchContainer" style="margin-top: 1rem; display: flex; justify-content: flex-start;">
+  <div id="clientSearchContainer" style="margin-top: 1rem; display: flex; justify-content: flex-start; gap: 10px;">
   <input
     type="text"
     id="clientSearchInput"
     placeholder="🔍 Search by Owner, Pet, or Contact"
-    style="padding: 6px 10px;  width: 230px; font-size: 0.9rem; border-radius: 0px; border: 1px solid #ccc; margin-left: 0;"
+    style="padding: 6px 10px;  width: 230px; font-size: 0.9rem; border-radius: 0px; border: 1px solid #ccc;"
   >
+  <button onclick="window.location.href='cancelled.html'" style="padding: 6px 12px; font-size: 0.9rem; background-color: #363636; color: white; border: none; cursor: pointer;">
+    Cancelled Sessions
+  </button>
 </div>
+
 
   <div class="table-container">
     <table>
@@ -98,6 +93,8 @@
     <th>Shedding</th>
     <th>Groomer</th>
     <th>Total</th>
+    <th>Time Released</th>
+    <th>Payment</th>
     <th>Action</th>
   </tr>
 </thead>
@@ -149,7 +146,8 @@
 
 
   <script src="js/viewClient.js"></script>
-  <script>function loadTopBar() {
+  <script>
+  function loadTopBar() {
   const topBarContainer = document.getElementById('topBarContainer');
   const topBarPath = path.join(__dirname, 'topBar.html');
 

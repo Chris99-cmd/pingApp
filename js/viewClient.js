@@ -6,6 +6,148 @@ require("jspdf-autotable");
 const ExcelJS = require("exceljs");
 const clientsPath = path.join(__dirname, './data/clients.json');
 const groomersPath = path.join(__dirname, './data/groomers.json');
+const packagesPath = path.join(__dirname, './data/packages.json');
+const sizesPath = path.join(__dirname, './data/sizes.json');
+const sessionSummariesPath = path.join(__dirname, './data/sessionSummaries.json');
+const expressPath = path.join(__dirname, './data/express.json');
+const mattingPath = path.join(__dirname, './data/matting.json');
+const sheddingPath = path.join(__dirname, './data/shedding.json');
+const tanglingPath = path.join(__dirname, './data/tangling.json');
+const pricesPath = path.join(__dirname, './data/prices.json');
+const usersPath = path.join(__dirname, './data/users.json');
+
+function validateAdminPassword(inputPassword) {
+  if (!fs.existsSync(usersPath)) return false;
+  const users = JSON.parse(fs.readFileSync(usersPath));
+  const adminUser = users.find(u => u.role === 'admin');
+  return adminUser && inputPassword === adminUser.password;
+}
+
+
+function requestAdminAccess(onSuccess) {
+  const modal = document.getElementById('adminPromptModal');
+  const input = document.getElementById('adminPasswordInput');
+  const confirmBtn = document.getElementById('confirmAdminBtn');
+  const cancelBtn = document.getElementById('cancelAdminBtn');
+
+  if (!modal || !input || !confirmBtn || !cancelBtn) {
+    alert("Admin prompt modal not found in DOM.");
+    return;
+  }
+
+  isDashboardRedirect = false; // This is for modal view, not dashboard
+  window._onAdminConfirm = onSuccess;
+
+  input.value = '';
+  modal.style.display = 'flex';
+  input.focus();
+
+  const confirmHandler = () => {
+    if (validateAdminPassword(input.value)) {
+      modal.style.display = 'none';
+      confirmBtn.removeEventListener('click', confirmHandler);
+      cancelBtn.removeEventListener('click', cancelHandler);
+      onSuccess();
+    } else {
+      alert("❌ Incorrect admin password.");
+    }
+  };
+
+  const cancelHandler = () => {
+    modal.style.display = 'none';
+    confirmBtn.removeEventListener('click', confirmHandler);
+    cancelBtn.removeEventListener('click', cancelHandler);
+  };
+
+  confirmBtn.addEventListener('click', confirmHandler);
+  cancelBtn.addEventListener('click', cancelHandler);
+}
+
+
+function requireAdminPassword(callback) {
+  const input = prompt("🔐 Enter admin password:");
+  if (input === null) return; // Cancel clicked
+
+  if (validateAdminPassword(input)) {
+    callback(); // ✅ proceed
+  } else {
+    alert("❌ Incorrect admin password.");
+  }
+}
+
+function calculateModalTotal() {
+  const size = document.getElementById('modalSize')?.value;
+  const pkg = document.getElementById('modalPkg')?.value;
+
+  const express = Array.from(document.getElementById('modalExpress')?.selectedOptions || []).map(o => o.value);
+  const matting = document.getElementById('modalMatting')?.value;
+  const tangling = document.getElementById('modalTangling')?.value;
+  const shedding = document.getElementById('modalShedding')?.value;
+
+  const prices = JSON.parse(fs.readFileSync(path.join(__dirname, './data/prices.json')));
+  const mattingOptions = JSON.parse(fs.readFileSync(mattingPath));
+  const tanglingOptions = JSON.parse(fs.readFileSync(tanglingPath));
+  const sheddingOptions = JSON.parse(fs.readFileSync(sheddingPath));
+  const expressOptions = JSON.parse(fs.readFileSync(expressPath));
+
+  let total = 0;
+
+  // 🧾 Package+Size combo price
+  if (prices[size] && prices[size][pkg]) {
+    total += prices[size][pkg];
+  }
+
+  // 🧾 Express
+  express.forEach(service => {
+    const match = expressOptions.find(e => e.name === service);
+    if (match) total += match.price;
+  });
+
+  // 🧾 Matting
+  const mat = mattingOptions.find(m => m.label === matting);
+  if (mat) total += mat.price;
+
+  // 🧾 Tangling
+  const tan = tanglingOptions.find(t => t.label === tangling);
+  if (tan) total += tan.price;
+
+  // 🧾 Shedding
+  const shed = sheddingOptions.find(s => s.label === shedding);
+  if (shed) total += shed.price;
+
+  // Update the modalTotal field
+  const totalField = document.getElementById('modalTotal');
+  if (totalField) totalField.value = `₱${total}`;
+
+  return total;
+}
+
+function loadPackages() {
+  const pkgSelect = document.getElementById('filterPackage');
+  if (!fs.existsSync(packagesPath)) return;
+  const packages = JSON.parse(fs.readFileSync(packagesPath));
+  packages.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = p;
+    pkgSelect.appendChild(opt);
+  });
+}
+
+
+function loadSizes() {
+  const sizeSelect = document.getElementById('filterSize');
+  if (!fs.existsSync(sizesPath)) return;
+  const sizes = JSON.parse(fs.readFileSync(sizesPath));
+  sizes.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.label;
+    opt.textContent = s.label;
+    sizeSelect.appendChild(opt);
+  });
+}
+
+
 const topBarHtml = fs.readFileSync(path.join(__dirname, 'topBar.html'), 'utf-8');
 document.getElementById('topBarContainer').innerHTML = topBarHtml;
 const tableBody = document.getElementById('sessionTableBody');
@@ -39,7 +181,35 @@ function loadClients() {
   if (fs.existsSync(clientsPath)) {
     allClients = JSON.parse(fs.readFileSync(clientsPath));
   }
+
+  if (!fs.existsSync(sessionSummariesPath)) return;
+  const summaries = JSON.parse(fs.readFileSync(sessionSummariesPath));
+
+  // Merge payment and releasedTime from sessionSummaries into each session
+  for (const summary of summaries) {
+    const { jobOrder, payment, releasedTime } = summary;
+    for (const client of allClients) {
+      for (const pet of client.pets) {
+        const session = pet.sessions?.find(s => String(s.jobOrder) === String(jobOrder));
+        if (session) {
+          if (payment) session.payment = payment;
+          if (releasedTime) session.timeReleased = releasedTime;
+        }
+      }
+    }
+  }
 }
+
+
+function formatReadableTime(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString('en-PH', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
+
 
 function applyFilters() {
   const groomerVal = groomerFilter.value;
@@ -54,10 +224,26 @@ function applyFilters() {
   let sessionCount = 0;
   let totalAmount = 0;
 
+  // Get today's date without time
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const isFilterEmpty = !groomerVal && !analogyVal && !packageVal && !sizeVal && !dateFrom && !dateTo;
+
   allClients.forEach(client => {
     client.pets.forEach(pet => {
       pet.sessions?.forEach(session => {
+        // Skip cancelled sessions
+if (session.status === 'cancelled') return;
+
         const sessionDate = new Date(session.date);
+        const compareDate = new Date(sessionDate);
+        compareDate.setHours(0, 0, 0, 0); // remove time part
+
+        // If no filters applied, default to today's sessions only
+        if (isFilterEmpty && compareDate.getTime() !== today.getTime()) return;
+
+        // Otherwise apply normal filters
         if (
           (groomerVal && session.groomer !== groomerVal) ||
           (analogyVal && pet.analogy !== analogyVal) ||
@@ -73,7 +259,7 @@ function applyFilters() {
         row.innerHTML = `
           <td>${sessionDate.toLocaleDateString()}</td>
           <td>${session.createdAt ? new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '-'}</td>
-          <td>${session.jobOrder || '-'}</td> <!-- NEW -->
+          <td>${session.jobOrder || '-'}</td>
           <td>${client.owner}</td>
           <td>${client.contact}</td>
           <td>${pet.name}</td>
@@ -91,7 +277,9 @@ function applyFilters() {
           <td>${session.shedding || '-'}</td>
           <td>${session.groomer || 'N/A'}</td>
           <td>₱${session.price}</td>
-          <td><span class="view-icon" data-owner="${client.owner}" data-contact="${client.contact}" data-barcode="${pet.barcode}" data-date="${session.date}">🔍</span></td>
+          <td>${session.timeReleased ? formatReadableTime(session.timeReleased) : '-'}</td>
+          <td>${session.payment || 'pending'}</td>
+          <td><span class="view-icon" data-owner="${client.owner}" data-contact="${client.contact}" data-barcode="${pet.barcode}" data-joborder="${session.jobOrder}">🔍</span></td>
         `;
 
         tableBody.appendChild(row);
@@ -116,28 +304,90 @@ const deleteBtn = document.getElementById('deleteBtn');
 let currentSessionRef = null;
 
 function showModal(client, pet, session) {
-  const express = session.express?.length ? session.express.join(', ') : 'None';
+  const expressList = session.express || [];
 
   modalFields.innerHTML = `
-    <label>Name: <input type="text" value="${pet.name}" disabled></label>
-    <label>Breed: <input type="text" value="${pet.breed}" disabled></label>
-    <label>Analogy: <input type="text" value="${pet.analogy}" disabled></label>
-    <label>Gender: <input type="text" value="${pet.gender || '-'}" disabled></label>
-    <label>Age: <input type="text" value="${session.age || '-'}" disabled></label>
-    <label>Weight: <input type="text" value="${session.weight || '-'}" disabled></label>
-    <label>Job Order #: <input type="text" value="${session.jobOrder || '-'}" disabled></label>
-    <label>Barcode: <input type="text" value="${pet.barcode}" disabled></label>
-    <label>Size: <input type="text" value="${session.size}" disabled></label>
-    <label>Package: <input type="text" value="${session.pkg}" disabled></label>
-    <label>Express: <input type="text" value="${express}" disabled></label>
-    <label>Matting: <input type="text" value="${session.matting || '-'}" disabled></label>
-    <label>Tangling: <input type="text" value="${session.tangling || '-'}" disabled></label>
-    <label>Shedding: <input type="text" value="${session.shedding || '-'}" disabled></label>
-    <label>Groomer: <input type="text" value="${session.groomer}" disabled></label>
-    <label>Total: <input type="text" value="₱${session.price}" disabled></label>
+    <label>Name: <input id="modalName" type="text" value="${pet.name}"></label>
+    <label>Breed: <input id="modalBreed" type="text" value="${pet.breed}"></label>
+    <label>Analogy: 
+      <select id="modalAnalogy">
+        <option ${pet.analogy === 'Canine' ? 'selected' : ''}>Canine</option>
+        <option ${pet.analogy === 'Feline' ? 'selected' : ''}>Feline</option>
+      </select>
+    </label>
+    <label>Gender:
+      <select id="modalGender">
+        <option ${pet.gender === 'Male' ? 'selected' : ''}>Male</option>
+        <option ${pet.gender === 'Female' ? 'selected' : ''}>Female</option>
+      </select>
+    </label>
+    <label>Age: <input id="modalAge" type="text" value="${session.age || ''}"></label>
+    <label>Weight: <input id="modalWeight" type="text" value="${session.weight || ''}"></label>
+    
+    <label>Size: <select id="modalSize"></select></label>
+    <label>Package: <select id="modalPkg"></select></label>
+    <label>Express: <select id="modalExpress" multiple></select></label>
+    <label>Matting: <select id="modalMatting"></select></label>
+    <label>Tangling: <select id="modalTangling"></select></label>
+    <label>Shedding: <select id="modalShedding"></select></label>
+    <label>Groomer: <select id="modalGroomer"></select></label>
+    <label>Payment:
+      <select id="modalPayment">
+        <option ${session.payment === 'cash' ? 'selected' : ''}>cash</option>
+        <option ${session.payment === 'gcash' ? 'selected' : ''}>gcash</option>
+        <option ${session.payment === 'promo' ? 'selected' : ''}>promo</option>
+      </select>
+    </label>
+    <label>Total: <input id="modalTotal" type="text" value="₱${session.price}" disabled></label>
   `;
+
+  // Load dropdowns
+  const loadSelectOptions = (id, values, selectedValue, isMulti = false) => {
+    const select = document.getElementById(id);
+
+      const allowNone = ['modalPkg', 'modalMatting', 'modalTangling', 'modalShedding', 'modalExpress'];
+  if (allowNone.includes(id)) values = ['None', ...values];
+
+    values.forEach(v => {
+      const opt = document.createElement('option');
+      opt.value = v;
+      opt.textContent = v;
+      if (isMulti && expressList.includes(v)) opt.selected = true;
+      else if (v === selectedValue) opt.selected = true;
+      select.appendChild(opt);
+    });
+  };
+
+  loadSelectOptions('modalSize', loadJsonArray(sizesPath, 'label'), session.size);
+  loadSelectOptions('modalPkg', loadJsonArray(packagesPath), session.pkg);
+  loadSelectOptions('modalExpress', loadJsonArray(expressPath, 'name'), session.express, true);
+  loadSelectOptions('modalMatting', loadJsonArray(mattingPath, 'label'), session.matting);
+  loadSelectOptions('modalTangling', loadJsonArray(tanglingPath, 'label'), session.tangling);
+  loadSelectOptions('modalShedding', loadJsonArray(sheddingPath, 'label'), session.shedding);
+  loadSelectOptions('modalGroomer', loadGroomerList(), session.groomer);
+
+  // Add listeners to update total on change
+  ['modalSize', 'modalPkg', 'modalMatting', 'modalTangling', 'modalShedding', 'modalExpress'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('change', calculateModalTotal);
+  });
+
+  calculateModalTotal(); // initialize
   modal.style.display = 'flex';
   currentSessionRef = { client, pet, session };
+}
+
+
+function loadJsonArray(filePath, key = null) {
+  if (!fs.existsSync(filePath)) return [];
+  const data = JSON.parse(fs.readFileSync(filePath));
+  return key ? data.map(d => d[key]) : data;
+}
+
+function loadGroomerList() {
+  if (!fs.existsSync(groomersPath)) return [];
+  const data = JSON.parse(fs.readFileSync(groomersPath));
+  return data.map(g => `${g.firstName} ${g.lastName}`);
 }
 
 editBtn.onclick = () => {
@@ -148,25 +398,97 @@ editBtn.onclick = () => {
 
 saveBtn.onclick = () => {
   showConfirmation('Are you sure you want to save these changes?', () => {
-    const inputs = modalFields.querySelectorAll('input');
     const updated = {
-      name: inputs[0].value,
-      breed: inputs[1].value,
-      analogy: inputs[2].value,
-      gender: inputs[3].value,
-      age: inputs[4].value,
-      weight: inputs[5].value,
-      barcode: inputs[6].value,
-      size: inputs[7].value,
-      matting: inputs[10].value,
-      tangling: inputs[11].value,
-      shedding: inputs[12].value,
-      groomer: inputs[13].value
+      name: document.getElementById('modalName').value,
+      breed: document.getElementById('modalBreed').value,
+      analogy: document.getElementById('modalAnalogy').value,
+      gender: document.getElementById('modalGender').value,
+      age: document.getElementById('modalAge').value,
+      weight: document.getElementById('modalWeight').value,
+      size: document.getElementById('modalSize').value,
+      pkg: document.getElementById('modalPkg').value,
+      express: Array.from(document.getElementById('modalExpress').selectedOptions).map(o => o.value),
+      matting: document.getElementById('modalMatting').value,
+      tangling: document.getElementById('modalTangling').value,
+      shedding: document.getElementById('modalShedding').value,
+      groomer: document.getElementById('modalGroomer').value,
+      payment: document.getElementById('modalPayment').value
     };
 
-    Object.assign(currentSessionRef.pet, updated);
-    currentSessionRef.session.groomer = updated.groomer;
+    const { client, pet, session } = currentSessionRef;
 
+    // Update pet info
+    pet.name = updated.name;
+    pet.breed = updated.breed;
+    pet.analogy = updated.analogy;
+    pet.gender = updated.gender;
+
+     const newPrice = calculateModalTotal();
+    session.price = newPrice;
+
+    // Update session info
+    Object.assign(session, {
+      age: updated.age,
+      weight: updated.weight,
+      size: updated.size,
+      pkg: updated.pkg,
+      express: updated.express,
+      matting: updated.matting,
+      tangling: updated.tangling,
+      shedding: updated.shedding,
+      groomer: updated.groomer,
+      payment: updated.payment
+    });
+
+    // Save to both JSONs
+    fs.writeFileSync(clientsPath, JSON.stringify(allClients, null, 2));
+
+    const summaries = JSON.parse(fs.readFileSync(sessionSummariesPath));
+    const summary = summaries.find(s => String(s.jobOrder) === String(session.jobOrder) && s.barcode === pet.barcode);
+    if (summary) {
+      summary.groomer = session.groomer;
+      summary.payment = session.payment;
+      fs.writeFileSync(sessionSummariesPath, JSON.stringify(summaries, null, 2));
+    }
+
+    applyFilters();
+    modal.style.display = 'none';
+    saveBtn.style.display = 'none';
+    editBtn.style.display = 'inline-block';
+
+   
+  });
+};
+
+deleteBtn.onclick = () => {
+  showConfirmation('Are you sure you want to delete this session?', () => {
+    const { client, pet, session } = currentSessionRef;
+
+    // Remove the session from pet.sessions
+    pet.sessions = pet.sessions.filter(s =>
+      String(s.jobOrder) !== String(session.jobOrder)
+    );
+
+    // Optionally clean up pets with no sessions
+    if (pet.sessions.length === 0) {
+      client.pets = client.pets.filter(p => p.barcode !== pet.barcode);
+    }
+
+    // Delete from sessionSummaries.json
+    const sessionSummaryPath = path.join(__dirname, './data/sessionSummaries.json');
+    let sessionSummaries = [];
+
+    if (fs.existsSync(sessionSummaryPath)) {
+      sessionSummaries = JSON.parse(fs.readFileSync(sessionSummaryPath));
+    }
+
+    sessionSummaries = sessionSummaries.filter(s =>
+      String(s.jobOrder) !== String(session.jobOrder) ||
+      s.barcode !== pet.barcode
+    );
+
+    // Save both updated JSONs
+    fs.writeFileSync(sessionSummaryPath, JSON.stringify(sessionSummaries, null, 2));
     fs.writeFileSync(clientsPath, JSON.stringify(allClients, null, 2));
 
     applyFilters();
@@ -174,17 +496,7 @@ saveBtn.onclick = () => {
   });
 };
 
-deleteBtn.onclick = () => {
-  showConfirmation('Are you sure you want to delete this session?', () => {
-    const index = currentSessionRef.pet.sessions.indexOf(currentSessionRef.session);
-    if (index !== -1) {
-      currentSessionRef.pet.sessions.splice(index, 1);
-      fs.writeFileSync(clientsPath, JSON.stringify(allClients, null, 2));
-      applyFilters();
-    }
-    modal.style.display = 'none';
-  });
-};
+
 
 closeBtn.onclick = () => {
   modal.style.display = 'none';
@@ -192,7 +504,12 @@ closeBtn.onclick = () => {
   saveBtn.style.display = 'none';
 };
 
-document.getElementById('applyFilter').onclick = applyFilters;
+document.getElementById('applyFilter').onclick = () => {
+  loadClients();  // 🔁 reload updated data
+  applyFilters();
+};
+
+
 document.getElementById('resetFilter').onclick = () => {
   groomerFilter.value = '';
   analogyFilter.value = '';
@@ -205,17 +522,24 @@ document.getElementById('resetFilter').onclick = () => {
 
 tableBody.addEventListener('click', (e) => {
   if (e.target.classList.contains('view-icon')) {
-    const { owner, contact, barcode, date } = e.target.dataset;
+    const { owner, contact, barcode, joborder } = e.target.dataset;
     const client = allClients.find(c => c.owner === owner && c.contact === contact);
     const pet = client?.pets.find(p => p.barcode === barcode);
-    const session = pet?.sessions.find(s => s.date === date);
-    if (client && pet && session) showModal(client, pet, session);
+    const session = pet?.sessions.find(s => String(s.jobOrder) === String(joborder));
+
+   if (client && pet && session) {
+  requestAdminAccess(() => showModal(client, pet, session));
+}
+
   }
 });
+
 
 window.addEventListener('DOMContentLoaded', () => {
   loadGroomers();
   loadClients();
+  loadPackages(); 
+  loadSizes(); 
   applyFilters();
 
   
@@ -431,25 +755,44 @@ window.addEventListener('DOMContentLoaded', () => {
   const confirmBtn = document.getElementById('confirmAdminBtn');
   const cancelBtn = document.getElementById('cancelAdminBtn');
 
-  if (backBtn && modal && input && confirmBtn && cancelBtn) {
-    backBtn.addEventListener('click', () => {
-      input.value = '';
-      modal.style.display = 'flex';
-      input.focus();
-    });
+if (backBtn && modal && input && confirmBtn && cancelBtn) {
+  backBtn.addEventListener('click', () => {
+    isDashboardRedirect = true; // This is for redirect
+    window._onAdminConfirm = null;
 
-    confirmBtn.addEventListener('click', () => {
-      if (input.value === adminPassword) {
-        window.location.href = 'adminDashboard.html';
-      } else {
-        alert("❌ Incorrect password. Access denied.");
-        modal.style.display = 'none';
-      }
-    });
+    input.value = '';
+    modal.style.display = 'flex';
+    input.focus();
+  });
+
+
+   confirmBtn.addEventListener('click', () => {
+  const password = document.getElementById('adminPasswordInput').value;
+
+  if (validateAdminPassword(password)) {
+    modal.style.display = 'none';
+
+    if (isDashboardRedirect) {
+      window.location.href = 'adminDashboard.html';
+    } else if (typeof window._onAdminConfirm === 'function') {
+      window._onAdminConfirm();
+      window._onAdminConfirm = null; // reset after use
+    }
+  } else {
+    alert("❌ Incorrect password. Access denied.");
+    modal.style.display = 'none';
+  }
+});
+
 
     cancelBtn.addEventListener('click', () => {
       modal.style.display = 'none';
     });
   }
+
+  window.addEventListener('DOMContentLoaded', () => {
+  applyFilters(); // <-- show today's data immediately
+});
+
 });
 

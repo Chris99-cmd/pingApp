@@ -34,6 +34,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   color: #ffffff;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 /* USER MENU */
@@ -60,7 +61,6 @@
    border-radius: 50%;
   width: 32px;
   height: 32px;
-  background-color: #2e2e2e;
   color: #fff;
   font-size: 1.1rem;
   display: flex;

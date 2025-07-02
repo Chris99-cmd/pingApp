@@ -1,14 +1,8 @@
 [
   {
-    "label": "Small 0-5kg"
+    "label": "Small"
   },
   {
-    "label": "Medium 5-12kg"
-  },
-  {
-    "label": "Large 12-22kg"
-  },
-  {
-    "label": "XLarge 22-32Kg"
+    "label": "Medium"
   }
 ]

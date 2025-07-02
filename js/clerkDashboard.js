@@ -225,6 +225,7 @@ window.addEventListener('DOMContentLoaded', () => {
     newWin.document.write(`<html><head><title>Print Barcode</title></head><body>${svg.outerHTML}</body></html>`);
     newWin.print();
   }
+  const loadClientBtn = document.getElementById('loadClientBtn');
 
   const form = document.getElementById('clientForm');
   form?.addEventListener('submit', (e) => {
@@ -254,7 +255,16 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     const pets = [...petDivs].map(div => {
-      const createdAt = new Date().toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true });
+function combineDateWithCurrentTime(dateStr) {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const now = new Date();
+  return new Date(year, month - 1, day, now.getHours(), now.getMinutes(), now.getSeconds());
+}
+
+const rawDate = document.getElementById('registrationDate')?.value;
+const sessionDate = rawDate ? combineDateWithCurrentTime(rawDate) : new Date();
+const createdAt = sessionDate.toLocaleString('en-PH', { timeZone: 'Asia/Manila', hour12: true });
+
       const name = div.querySelector('.pet-name').value;
       const size = div.querySelector('.pet-size').value;
       const pkg = div.querySelector('.pet-package').value;
@@ -299,7 +309,7 @@ expressSelected.forEach(service => {
         age, weight, gender,
         jobOrder,
         sessions: [{
-          date: new Date().toISOString(),
+          date: sessionDate.toISOString(),
           createdAt,
           pkg,
           express: expressSelected,
@@ -343,26 +353,29 @@ expressSelected.forEach(service => {
    pets.forEach(p => {
   const session = p.sessions[p.sessions.length - 1];
   summaries.push({
-    jobOrder: p.jobOrder,
-    owner,
-    contact,
-    pet: p.name,
-    breed: p.breed,
-    analogy: p.analogy,
-    gender: p.gender,
-    age: p.age,
-    weight: p.weight,
-    barcode: p.barcode,
-    size: p.size,
-    package: p.pkg,
-    express: p.expressSelected.join(', '),
-    matting: p.matting,
-    tangling: p.tangling,
-    shedding: p.shedding,
-    groomer: p.groomer,
-    total: session.price,
-    date: session.createdAt
-  });
+  jobOrder: p.jobOrder,
+  owner,
+  contact,
+  pet: p.name,
+  breed: p.breed,
+  analogy: p.analogy,
+  gender: p.gender,
+  age: p.age,
+  weight: p.weight,
+  barcode: p.barcode,
+  size: p.size,
+  package: p.pkg,
+  express: p.expressSelected.join(', '),
+  matting: p.matting,
+  tangling: p.tangling,
+  shedding: p.shedding,
+  groomer: p.groomer,
+  total: session.price,
+  date: session.createdAt,
+  status: 'pending', // ✅ Add this line
+  createdAt: new Date().toISOString(), // ✅ Also ensure this exists for your formatDate/Time
+});
+
 });
 
     fs.writeFileSync(summaryPath, JSON.stringify(summaries, null, 2));
@@ -578,39 +591,6 @@ document.getElementById('printSummaryBtn')?.addEventListener('click', () => {
   printWindow.document.write(htmlContent);
   printWindow.document.close();
 });
-
-
-
-
-  loadClientBtn?.addEventListener('click', () => {
-    const searchBarcode = searchBarcodeInput.value.trim();
-    if (!searchBarcode) return alert('Please scan or type a pet barcode!');
-
-    const clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
-    let foundClient = null;
-    let foundPet = null;
-
-    for (const client of clients) {
-      for (const pet of client.pets) {
-        if (pet.barcode === searchBarcode) {
-          foundClient = client;
-          foundPet = pet;
-          break;
-        }
-      }
-      if (foundClient) break;
-    }
-
-    if (!foundClient || !foundPet) return alert(`No pet found for barcode: ${searchBarcode}`);
-
-    localStorage.setItem('selectedClient', JSON.stringify(foundClient));
-    localStorage.setItem('selectedPetBarcode', foundPet.barcode);
-    window.location.href = 'addSession.html';
-  });
-
-  goToClientListBtn?.addEventListener('click', () => {
-    window.location = 'viewClients.html';
-  });
 
   addPetBtn?.addEventListener('click', addPetSection);
 });

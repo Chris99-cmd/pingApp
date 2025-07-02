@@ -1,0 +1,196 @@
+/* GENERAL LAYOUT */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
+  overflow-x: hidden;
+}
+
+.onGoing-container {
+  padding: 40px;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+h2 {
+  color: rgb(255, 125, 0);
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+/* SCROLLABLE WRAPPER */
+.session-list {
+  overflow-x: auto;
+  border: 1px solid #333;
+  border-radius: 0;
+  background-color: #1a1a1a;
+}
+
+/* TABLE LAYOUT USING GRID */
+.session-header,
+.session-row {
+  display: grid;
+  grid-template-columns:
+    80px   /* Date */
+    80px   /* Time */
+    70px   /* J.O # */
+    130px  /* Owner */
+    100px  /* Pet */
+    100px  /* Breed */
+    100px  /* Size */
+    100px  /* Package */
+    120px  /* Express */
+    100px  /* Matting */
+    100px  /* Tangling */
+    100px  /* Shedding */
+    80px   /* Price */
+    110px  /* Payment */
+    120px;  /* Action */
+  gap: 10px;
+  padding: 12px 16px;
+  align-items: center;
+  min-width: max-content;
+}
+
+/* HEADER STYLING */
+.session-header {
+  font-weight: bold;
+  background-color: #1e1e1e;
+  border-bottom: 2px solid rgb(255, 125, 0);
+}
+
+.session-header div,
+.session-row div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+/* ROW STYLING */
+.session-row {
+  background-color: #1a1a1a;
+  border-left: 4px solid rgb(255, 125, 0);
+  transition: background 0.2s;
+  margin-bottom: 4px;
+}
+
+.session-row:hover {
+  background-color: #222;
+}
+
+/* DROPDOWN */
+.payment-select {
+  background-color: #262626;
+  color: #fff;
+  border: 1px solid #444;
+  padding: 6px 8px;
+  font-size: 14px;
+  width: 100%;
+}
+
+/* BUTTONS */
+.save-button {
+  background-color: rgb(255, 125, 0);
+  color: black;
+  border: none;
+  padding: 3px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  font-weight: bold;
+}
+
+.save-button:hover {
+  background-color: #ff7300;
+}
+
+.cancel-button {
+  background-color: #e74c3c;
+  border-radius: 2px;
+   color: black;
+  border: none;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 100%;
+  font-weight: bold;
+}
+
+.cancel-button:hover {
+  background-color: #c0392b;
+}
+
+
+  .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.8); /* darkened overlay */
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: #1e1e1e;
+  color: #f0f0f0;
+  padding: 24px;
+  width: 360px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 18px;
+  color: #ffffff;
+  border-bottom: 1px solid #333;
+  padding-bottom: 6px;
+}
+
+#cancelReason {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+  resize: none;
+  font-size: 14px;
+}
+
+.modal-content button {
+  background-color: #3a3a3a;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  margin-left: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.modal-content button:hover {
+  background-color: #505050;
+}
+
+.edit-session-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  color: #fff;
+}
+.edit-session-container label {
+  display: block;
+  margin-top: 10px;
+}
+.edit-session-container select {
+  width: 100%;
+  padding: 5px;
+  margin-top: 5px;
+}

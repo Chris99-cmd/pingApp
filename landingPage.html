@@ -1,11 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="css/topBar.css">
+  <link rel="stylesheet" href="css/landingPage.css">
 </head>
 <body>
-    Hi
+  <div id="topBarContainer"></div>
+
+  <div class="landing-container">
+    
+    <!-- LEFT COLUMN -->
+    <div class="left-column">
+        <div class="live-date">
+    <h2>Dashboard</h2>
+    <span id="liveDate" class="date-display"></span>
+  </div>
+      <button onclick="window.location.href='clerkDashboard.html'">➕ Create New Grooming Session</button>
+      <button onclick="window.location.href='onGoing.html'">📋 Ongoing Grooming Session</button>
+      <h3 style="margin-top: 10px;">🟢 Live Ongoing Sessions:</h3>
+<div id="ongoingPreview" class="ongoing-preview">
+  <p style="color:#888;">Loading...</p>
+</div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-column">
+        <h2>Existing Clients</h2>
+      <input type="text" id="searchBarcodeInput" placeholder="Scan or type barcode here..." style="padding: 12px; font-size: 16px;" />
+<button id="loadClientBtn">📷 Load Client</button>
+
+<button onclick="window.location.href='viewClients.html'">📝 View/Edit Client</button>
+    </div>
+  </div>
+<script>
+  function updateLiveDate() {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const now = new Date();
+    document.getElementById('liveDate').textContent = now.toLocaleDateString(undefined, options);
+  }
+
+  updateLiveDate();
+  setInterval(updateLiveDate, 60 * 1000); // update every minute
+</script>
+
+
+
+<script>
+  const fs = require('fs');
+  const path = require('path');
+  const clientsPath = path.join(__dirname, './data/clients.json');
+
+  const loadClientBtn = document.getElementById('loadClientBtn');
+  const searchBarcodeInput = document.getElementById('searchBarcodeInput');
+
+  loadClientBtn?.addEventListener('click', () => {
+    const searchBarcode = searchBarcodeInput.value.trim();
+    if (!searchBarcode) return alert('Please scan or type a pet barcode!');
+
+    const clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
+    let foundClient = null;
+    let foundPet = null;
+
+    for (const client of clients) {
+      for (const pet of client.pets) {
+        if (pet.barcode === searchBarcode) {
+          foundClient = client;
+          foundPet = pet;
+          break;
+        }
+      }
+      if (foundClient) break;
+    }
+
+    if (!foundClient || !foundPet) return alert(`No pet found for barcode: ${searchBarcode}`);
+
+    localStorage.setItem('selectedClient', JSON.stringify(foundClient));
+    localStorage.setItem('selectedPetBarcode', foundPet.barcode);
+    window.location.href = 'addSession.html';
+  });
+
+  searchBarcodeInput?.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      loadClientBtn.click();
+    }
+  });
+</script>
+
+  <script>
+    function loadTopBar() {
+  const topBarContainer = document.getElementById('topBarContainer');
+  const topBarPath = path.join(__dirname, 'topBar.html');
+
+  fs.readFile(topBarPath, 'utf8', (err, data) => {
+    if (!err && topBarContainer) {
+      topBarContainer.innerHTML = data;
+      initTopBarEvents();
+    } else {
+      console.error('❌ Failed to load top bar:', err);
+    }
+  });
+}
+
+function initTopBarEvents() {
+  document.getElementById('dropdownToggle')?.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.toggle('show');
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  });
+
+  const name = localStorage.getItem('userName') || 'User';
+  document.getElementById('userName').textContent = name;
+}
+
+module.exports = { loadTopBar };
+window.addEventListener('DOMContentLoaded', () => {
+  loadTopBar();
+});
+  </script>
+
+  <script>
+  const sessionPath = path.join(__dirname, './data/sessionSummaries.json');
+  const ongoingPreviewEl = document.getElementById('ongoingPreview');
+
+  function renderOngoingPreview() {
+    if (!fs.existsSync(sessionPath)) {
+      ongoingPreviewEl.innerHTML = '<p style="color:#888;">No ongoing sessions.</p>';
+      return;
+    }
+
+    const allSessions = JSON.parse(fs.readFileSync(sessionPath));
+    const ongoing = allSessions.filter(s => s.status === 'pending');
+
+    if (ongoing.length === 0) {
+      ongoingPreviewEl.innerHTML = '<p style="color:#888;">No ongoing sessions.</p>';
+      return;
+    }
+
+   ongoingPreviewEl.innerHTML = ongoing.map(sess => `
+  <div class="ongoing-item">
+    <strong>Pet:</strong> ${sess.pet || 'N/A'} | 
+    <strong>Owner:</strong> ${sess.owner || 'N/A'}<br>
+    <strong>Groomer:</strong> ${sess.groomer || 'N/A'} |
+    <strong>Package:</strong> ${sess.pkg || sess.package || 'None'} |
+    <strong>Start:</strong> ${new Date(sess.createdAt).toLocaleTimeString()}
+  </div>
+`).join('');
+
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    renderOngoingPreview();
+    setInterval(renderOngoingPreview, 3000); // auto-refresh every 3 seconds
+  });
+</script>
+
 </body>
 </html>

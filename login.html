@@ -39,7 +39,7 @@
       const user = users.find(u => u.username === username && u.password === password);
 
       if (user) {
-        window.location = user.role === 'admin' ? 'adminDashboard.html' : 'clerkDashboard.html';
+        window.location = user.role === 'admin' ? 'adminDashboard.html' : 'landingPage.html';
       } else {
         alert('Invalid credentials');
       }

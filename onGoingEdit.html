@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Session</title>
+  <link rel="stylesheet" href="css/topBar.css">
+  <link rel="stylesheet" href="css/onGoing.css">
+</head>
+<body>
+  <div id="topBarContainer"></div>
+  <div class="edit-session-container">
+    <h2>✏️ Edit Grooming Session</h2>
+    <form id="editForm">
+      <!-- dropdowns populated via JS -->
+    </form>
+    <button id="saveChanges">Save Changes</button>
+    <button onclick="history.back()">Cancel</button>
+  </div>
+
+  <script src="js/onGoingEdit.js"></script>
+  <script>
+    function loadTopBar() {
+  const topBarContainer = document.getElementById('topBarContainer');
+  const topBarPath = path.join(__dirname, 'topBar.html');
+
+  fs.readFile(topBarPath, 'utf8', (err, data) => {
+    if (!err && topBarContainer) {
+      topBarContainer.innerHTML = data;
+      initTopBarEvents();
+    } else {
+      console.error('❌ Failed to load top bar:', err);
+    }
+  });
+}
+
+function initTopBarEvents() {
+  document.getElementById('dropdownToggle')?.addEventListener('click', () => {
+    document.getElementById('userDropdown')?.classList.toggle('show');
+  });
+
+  document.getElementById('logoutBtn')?.addEventListener('click', () => {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  });
+
+  const name = localStorage.getItem('userName') || 'User';
+  document.getElementById('userName').textContent = name;
+}
+
+module.exports = { loadTopBar };
+window.addEventListener('DOMContentLoaded', () => {
+  loadTopBar();
+});
+
+  </script>
+</body>
+</html>

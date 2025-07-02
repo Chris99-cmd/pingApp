@@ -1,0 +1,64 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
+  color: #ffffff;
+  margin: 0;
+  padding: 80px 20px 20px; /* Top padding for the top bar */
+}
+
+h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #ffffff;
+  margin-bottom: 25px;
+}
+
+#cancelledList {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.session-header,
+.session-row {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(100px, 1fr));
+
+  gap: 12px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #333;
+  align-items: center;
+}
+
+.session-header {
+  font-weight: 600;
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+  border-top: 1px solid #333;
+}
+
+.session-row:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+.session-row:nth-child(odd) {
+  background-color: #181818;
+}
+
+.session-row:hover {
+  background-color: #2a2a2a;
+}
+
+div {
+  word-break: break-word;
+  font-size: 0.95rem;
+}
+
+.delete-btn {
+  background: rgb(65, 65, 65);
+  color: white;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+

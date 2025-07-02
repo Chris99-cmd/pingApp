@@ -62,7 +62,7 @@ function getOptions(filePath, labelKey = 'label') {
   }
 }
 
-const sizes = getOptions(sizesPath);
+const sizes = getOptions(sizesPath, 'label');
 const packages = getOptions(packagesPath);
 
 function getNextJobOrderNumber() {
@@ -90,6 +90,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const toggleFormBtn = document.getElementById('toggleFormBtn');
   const groomerSelect = document.getElementById('sessionGroomer');
   const totalDisplay = document.getElementById('sessionTotal');
+  
+  const manilaDate = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' }); // "YYYY-MM-DD"
+document.getElementById('sessionDate').value = manilaDate;
+
+
 
   // Populate size and package dropdowns
 document.getElementById('sessionSize').innerHTML =
@@ -149,10 +154,16 @@ document.getElementById('sessionShedding').innerHTML =
 function updateSessionHistory() {
   historyList.innerHTML = '';
   if (currentPet.sessions && currentPet.sessions.length > 0) {
-    currentPet.sessions.forEach((s, i) => {
-      const displayTime = s.createdAt || (s.date ? new Date(s.date).toLocaleString('en-PH', { timeZone: 'Asia/Manila' }) : '-');
-      const li = document.createElement('li');
-      li.innerHTML = `
+   currentPet.sessions
+  .filter(s => s.status !== 'cancelled') // ✅ exclude cancelled ones
+  .forEach((s, i) => {
+    const rawTime = s.createdAt || s.date;
+const displayTime = rawTime
+  ? new Date(rawTime).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })
+  : '-';
+
+    const li = document.createElement('li');
+    li.innerHTML = `
         <strong>Session ${i + 1}</strong>: ${displayTime} — 
         ${s.pkg} — ₱${s.price} — Groomer: ${s.groomer || 'N/A'}
       `;
@@ -278,7 +289,7 @@ expressSelected.forEach(service => {
   createdAt: getPhilippineTimestamp(),
     jobOrder: jobOrderNumber,
 
-
+ 
   // Session-specific snapshot fields:
   age,
   weight,
@@ -291,6 +302,7 @@ expressSelected.forEach(service => {
   post,
   vaccinations,
 
+  
 };
 
     currentPet.sessions.push(newSession);
@@ -321,19 +333,25 @@ expressSelected.forEach(service => {
 
     // Add to summaries
     let summaries = fs.existsSync(summaryPath) ? JSON.parse(fs.readFileSync(summaryPath)) : [];
-    summaries.push({
-      
-      date,
-      owner: currentClient.owner,
-      pet: currentPet.name,
-      package: pkg,
-      express: expressSelected,
-      total: price,
-      groomer,
-      createdAt: newSession.createdAt,
-        jobOrder: jobOrderNumber,
+ summaries.push({
+  date,
+  owner: currentClient.owner,
+  pet: currentPet.name,
+  breed: currentPet.breed,
+  size: size,
+  package: pkg,
+  express: expressSelected,
+  matting,
+  tangling,
+  shedding,
+  total: price,
+  groomer,
+  jobOrder: jobOrderNumber,
+  createdAt: new Date().toISOString(),
+  status: 'pending',
+  barcode: currentPet.barcode
+});
 
-    });
     fs.writeFileSync(summaryPath, JSON.stringify(summaries, null, 2));
 
     alert('✅ Session saved!');

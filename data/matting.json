@@ -6,13 +6,5 @@
   {
     "label": "Moderate",
     "price": 350
-  },
-  {
-    "label": "Severe",
-    "price": 550
-  },
-  {
-    "label": "Extreme",
-    "price": 700
   }
 ]

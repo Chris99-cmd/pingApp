@@ -107,14 +107,20 @@ function renderPriceTable() {
   sizes.forEach(size => html += `<th>${size.label}</th>`);
   html += '</tr></thead><tbody>';
 
-  packages.forEach(pkg => {
-    html += `<tr><td>${pkg}</td>`;
-    sizes.forEach(size => {
-      const value = prices[pkg]?.[size.label] || 0;
-      html += `<td><input type="number" value="${value}" onchange="updatePrice('${pkg}', '${size.label}', this.value)"></td>`;
-    });
-    html += '</tr>';
+packages.forEach(pkg => {
+  html += `<tr><td>${pkg}</td>`;
+  sizes.forEach(size => {
+    let value = prices[pkg]?.[size.label];
+    if (value === undefined || isNaN(value)) {
+      value = 0;
+      if (!prices[pkg]) prices[pkg] = {};
+      prices[pkg][size.label] = 0; // initialize it!
+    }
+    html += `<td><input type="number" value="${value}" onchange="updatePrice('${pkg}', '${size.label}', this.value)"></td>`;
   });
+  html += '</tr>';
+});
+
 
   html += '</tbody>';
   priceTableEl.innerHTML = html;
@@ -126,6 +132,7 @@ function updatePrice(pkg, size, value) {
 }
 
 document.getElementById('savePricesBtn')?.addEventListener('click', () => {
+  if (!confirm('Are you sure you want to save all prices?')) return;
   try {
     // Clean up: remove any old flat-style keys like "basic_Small 0-5kg"
 Object.keys(prices).forEach(key => {
@@ -185,8 +192,8 @@ function addPackage() {
     if (value) {
       packages.push(value);
       fs.writeFileSync(packagesPath, JSON.stringify(packages, null, 2));
-      renderPackages();
-      renderPriceTable();
+loadData();
+
     }
   });
 }
@@ -196,8 +203,8 @@ function editPackage(index) {
     if (value) {
       packages[index] = value;
       fs.writeFileSync(packagesPath, JSON.stringify(packages, null, 2));
-      renderPackages();
-      renderPriceTable();
+loadData();
+
     }
   });
 }
@@ -213,8 +220,8 @@ function deletePackage(index) {
   delete prices[pkg];
 
   fs.writeFileSync(pricesPath, JSON.stringify(prices, null, 2));
-  renderPackages();
-  renderPriceTable();
+loadData();
+
 }
 
 function addSize() {
@@ -222,8 +229,8 @@ function addSize() {
     if (value) {
       sizes.push({ label: value });
       fs.writeFileSync(sizesPath, JSON.stringify(sizes, null, 2));
-      renderSizes();
-      renderPriceTable();
+   loadData();
+
     }
   });
 }
@@ -233,8 +240,8 @@ function editSize(index) {
     if (value) {
       sizes[index].label = value;
       fs.writeFileSync(sizesPath, JSON.stringify(sizes, null, 2));
-      renderSizes();
-      renderPriceTable();
+loadData();
+
     }
   });
 }
@@ -254,8 +261,8 @@ function deleteSize(index) {
   });
 
   fs.writeFileSync(pricesPath, JSON.stringify(prices, null, 2));
-  renderSizes();
-  renderPriceTable();
+loadData();
+
 }
 
 function addExpress() {
