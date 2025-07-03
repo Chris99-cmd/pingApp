@@ -50,7 +50,9 @@
 <script>
   const fs = require('fs');
   const path = require('path');
-  const clientsPath = path.join(__dirname, './data/clients.json');
+   const { app } = require('@electron/remote');
+  const userDataPath = app.getPath('userData'); 
+  const clientsPath = path.join(userDataPath, 'clients.json');
 
   const loadClientBtn = document.getElementById('loadClientBtn');
   const searchBarcodeInput = document.getElementById('searchBarcodeInput');
@@ -123,7 +125,7 @@ window.addEventListener('DOMContentLoaded', () => {
   </script>
 
   <script>
-  const sessionPath = path.join(__dirname, './data/sessionSummaries.json');
+  const sessionPath = path.join(userDataPath, 'sessionSummaries.json');
   const ongoingPreviewEl = document.getElementById('ongoingPreview');
 
   function renderOngoingPreview() {

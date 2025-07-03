@@ -1,19 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const jobOrderPath = path.join(__dirname, './data/jobOrderCounter.json');
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
+const jobOrderPath = path.join(userDataPath, 'jobOrderCounter.json');
 const topBarHtml = fs.readFileSync(path.join(__dirname, 'topBar.html'), 'utf-8');
 document.getElementById('topBarContainer').innerHTML = topBarHtml;
 
-const clientsPath = path.join(__dirname, './data/clients.json');
-const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
-const groomersPath = path.join(__dirname, './data/groomers.json');
-const pricesPath = path.join(__dirname, './data/prices.json');
-const expressPath = path.join(__dirname, './data/express.json');
-const mattingPath = path.join(__dirname, './data/matting.json');
-const tanglingPath = path.join(__dirname, './data/tangling.json');
-const sheddingPath = path.join(__dirname, './data/shedding.json');
-const sizesPath = path.join(__dirname, './data/sizes.json');
-const packagesPath = path.join(__dirname, './data/packages.json');
+const clientsPath = path.join(userDataPath, 'clients.json');
+const summaryPath = path.join(userDataPath, 'sessionSummaries.json');
+const groomersPath = path.join(userDataPath, 'groomers.json');
+const pricesPath = path.join(userDataPath, 'prices.json');
+const expressPath = path.join(userDataPath, 'express.json');
+const mattingPath = path.join(userDataPath, 'matting.json');
+const tanglingPath = path.join(userDataPath, 'tangling.json');
+const sheddingPath = path.join(userDataPath, 'shedding.json');
+const sizesPath = path.join(userDataPath, 'sizes.json');
+const packagesPath = path.join(userDataPath, 'packages.json');
+let currentClient = null;
+let currentPet = null;
 
 let pricingData = { packages: {}, express: {}, extras: {} };
 

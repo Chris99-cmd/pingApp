@@ -1,13 +1,14 @@
 const fs = require('fs');
 const path = require('path');
-
-const packagesPath = path.join(__dirname, './data/packages.json');
-const sizesPath = path.join(__dirname, './data/sizes.json');
-const expressPath = path.join(__dirname, './data/express.json');
-const pricesPath = path.join(__dirname, './data/prices.json');
-const mattingPath = path.join(__dirname, './data/matting.json');
-const tanglingPath = path.join(__dirname, './data/tangling.json');
-const sheddingPath = path.join(__dirname, './data/shedding.json');
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
+const packagesPath = path.join(userDataPath, 'packages.json');
+const sizesPath = path.join(userDataPath, 'sizes.json');
+const expressPath = path.join(userDataPath, 'express.json');
+const pricesPath = path.join(userDataPath, 'prices.json');
+const mattingPath = path.join(userDataPath, 'matting.json');
+const tanglingPath = path.join(userDataPath, 'tangling.json');
+const sheddingPath = path.join(userDataPath, 'shedding.json');
 
 const packageListEl = document.getElementById('packageList');
 const sizeListEl = document.getElementById('sizeList');

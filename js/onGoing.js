@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
 const sessionListEl = document.getElementById('sessionList');
-const summariesPath = path.join(__dirname, './data/sessionSummaries.json');
-const clientsPath = path.join(__dirname, './data/clients.json');
+const summariesPath = path.join(userDataPath, 'sessionSummaries.json');
+const clientsPath = path.join(userDataPath, 'clients.json');
 
 function formatDate(date) {
   return new Date(date).toLocaleDateString('en-PH', {
@@ -138,6 +139,8 @@ saveBtn.addEventListener('click', () => {
       if (petSession) {
         petSession.payment = selected;
         petSession.timeReleased = now.toISOString();
+        petSession.status = 'done';
+
 
         // 🔁 Recalculate totalSpent
         pet.totalSpent = pet.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
@@ -169,7 +172,7 @@ cancelBtn.addEventListener('click', () => {
     session.status = 'cancelled';
     session.cancelledAt = new Date().toISOString();
     session.cancelReason = reason;
-const cancelledPath = path.join(__dirname, './data/cancelledSessions.json');
+const cancelledPath = path.join(userDataPath, 'cancelledSessions.json');
 let cancelled = fs.existsSync(cancelledPath)
   ? JSON.parse(fs.readFileSync(cancelledPath))
   : [];
@@ -234,7 +237,7 @@ const fields = [
   session.matting || "None",
   session.tangling || "None",
   session.shedding || "None",
-  `₱${session.total}`
+  `₱${session.total || session.price || 0}`
 ];
 
 

@@ -1,9 +1,11 @@
 const fs = require('fs');
     const path = require('path');
-    const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
-    const groomersPath = path.join(__dirname, './data/groomers.json');
-    const clerksPath = path.join(__dirname, './data/clerks.json');
-    const packagesPath = path.join(__dirname, './data/packages.json');
+    const { app } = require('@electron/remote');
+    const userDataPath = app.getPath('userData');
+    const summaryPath = path.join(userDataPath, 'sessionSummaries.json');
+    const groomersPath = path.join(userDataPath, 'groomers.json');
+    const clerksPath = path.join(userDataPath, 'clerks.json');
+    const packagesPath = path.join(userDataPath, 'packages.json');
 
     const totalSessionsEl = document.getElementById('totalSessions');
     const totalRevenueEl = document.getElementById('totalRevenue');

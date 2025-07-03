@@ -1,20 +1,20 @@
 const fs = require('fs');
 const path = require('path');
-const { dialog } = require('@electron/remote');
 const { jsPDF } = require("jspdf");
 require("jspdf-autotable");
-const ExcelJS = require("exceljs");
-const clientsPath = path.join(__dirname, './data/clients.json');
-const groomersPath = path.join(__dirname, './data/groomers.json');
-const packagesPath = path.join(__dirname, './data/packages.json');
-const sizesPath = path.join(__dirname, './data/sizes.json');
-const sessionSummariesPath = path.join(__dirname, './data/sessionSummaries.json');
-const expressPath = path.join(__dirname, './data/express.json');
-const mattingPath = path.join(__dirname, './data/matting.json');
-const sheddingPath = path.join(__dirname, './data/shedding.json');
-const tanglingPath = path.join(__dirname, './data/tangling.json');
-const pricesPath = path.join(__dirname, './data/prices.json');
-const usersPath = path.join(__dirname, './data/users.json');
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
+const clientsPath = path.join(userDataPath, 'clients.json');
+const groomersPath = path.join(userDataPath, 'groomers.json');
+const packagesPath = path.join(userDataPath, 'packages.json');
+const sizesPath = path.join(userDataPath, 'sizes.json');
+const sessionSummariesPath = path.join(userDataPath, 'sessionSummaries.json');
+const expressPath = path.join(userDataPath, 'express.json');
+const mattingPath = path.join(userDataPath, 'matting.json');
+const sheddingPath = path.join(userDataPath, 'shedding.json');
+const tanglingPath = path.join(userDataPath, 'tangling.json');
+const pricesPath = path.join(userDataPath, 'prices.json');
+const usersPath = path.join(userDataPath, 'users.json');
 
 function validateAdminPassword(inputPassword) {
   if (!fs.existsSync(usersPath)) return false;
@@ -84,7 +84,7 @@ function calculateModalTotal() {
   const tangling = document.getElementById('modalTangling')?.value;
   const shedding = document.getElementById('modalShedding')?.value;
 
-  const prices = JSON.parse(fs.readFileSync(path.join(__dirname, './data/prices.json')));
+  const prices = JSON.parse(fs.readFileSync(path.join(userDataPath, 'prices.json')));
   const mattingOptions = JSON.parse(fs.readFileSync(mattingPath));
   const tanglingOptions = JSON.parse(fs.readFileSync(tanglingPath));
   const sheddingOptions = JSON.parse(fs.readFileSync(sheddingPath));
@@ -491,7 +491,7 @@ deleteBtn.onclick = () => {
       }
     }
 
-const sessionSummaryPath = path.join(__dirname, './data/sessionSummaries.json');
+const sessionSummaryPath = path.join(userDataPath, 'sessionSummaries.json');
 let sessionSummaries = [];
 
 if (fs.existsSync(sessionSummaryPath)) {

@@ -1,9 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
 const jobOrder = localStorage.getItem('editJobOrder');
-const summariesPath = path.join(__dirname, './data/sessionSummaries.json');
-const clientsPath = path.join(__dirname, './data/clients.json');
+const summariesPath = path.join(userDataPath, 'sessionSummaries.json');
+const clientsPath = path.join(userDataPath, 'clients.json');
 
 const dropdownSources = {
   size: 'sizes.json',
@@ -23,52 +24,68 @@ function createDropdown(label, name, selectedValue, multiple = false) {
   select.name = name;
   if (multiple) select.multiple = true;
 
-  const jsonPath = path.join(__dirname, `./data/${dropdownSources[name]}`);
-  const options = JSON.parse(fs.readFileSync(jsonPath));
+const fileName = dropdownSources[name];
+if (!fileName) {
+  console.error(`⚠️ Unknown dropdown name: ${name}`);
+  return;
+}
 
-  // Only add "None" for matting, tangling, and shedding
-  const noneAllowed = ['express','matting', 'tangling', 'shedding'];
-  if (noneAllowed.includes(name)) options.unshift("None");
+// ✅ this now reads from where your app saves the actual settings
+const jsonPath = path.join(userDataPath, fileName);
 
-  options.forEach(opt => {
-    const option = document.createElement('option');
+let options = [];
+try {
+  if (fs.existsSync(jsonPath)) {
+    options = JSON.parse(fs.readFileSync(jsonPath));
+  } else {
+    console.warn(`⚠️ File not found: ${jsonPath}`);
+  }
+} catch (err) {
+  console.error(`❌ Failed to read or parse ${jsonPath}:`, err);
+}
 
-    let value, text;
+// Only add "None" for matting, tangling, and shedding
+const noneAllowed = ['express','matting', 'tangling', 'shedding'];
+if (noneAllowed.includes(name)) options.unshift("None");
 
-    if (typeof opt === 'object') {
-      value = opt.name || opt.label || JSON.stringify(opt);
-      text = opt.name || opt.label || JSON.stringify(opt);
-    } else {
-      value = opt;
-      text = opt;
-    }
+options.forEach(opt => {
+  const option = document.createElement('option');
+  let value, text;
 
-    option.value = value;
-    option.textContent = text;
+  if (typeof opt === 'object') {
+    value = opt.name || opt.label || JSON.stringify(opt);
+    text = opt.name || opt.label || JSON.stringify(opt);
+  } else {
+    value = opt;
+    text = opt;
+  }
 
-    // ✅ Handle multi-select correctly, including for previously chosen items
-    if (multiple && Array.isArray(selectedValue) && selectedValue.includes(value)) {
-      option.selected = true;
-    } else if (!multiple && selectedValue === value) {
-      option.selected = true;
-    }
+  option.value = value;
+  option.textContent = text;
 
-    select.appendChild(option);
-  });
+  if (multiple && Array.isArray(selectedValue) && selectedValue.includes(value)) {
+    option.selected = true;
+  } else if (!multiple && selectedValue === value) {
+    option.selected = true;
+  }
 
-  div.appendChild(labelEl);
-  div.appendChild(select);
-  form.appendChild(div);
+  select.appendChild(option);
+});
 
-  select.addEventListener('change', updateDisplayedPrice);
+div.appendChild(labelEl);
+div.appendChild(select);
+form.appendChild(div);
+
+select.addEventListener('change', updateDisplayedPrice);
+
 }
 
 function calculateTotal(session) {
-  const pricesData = JSON.parse(fs.readFileSync(path.join(__dirname, './data/prices.json')));
-  const mattingOptions = JSON.parse(fs.readFileSync(path.join(__dirname, './data/matting.json')));
-  const tanglingOptions = JSON.parse(fs.readFileSync(path.join(__dirname, './data/tangling.json')));
-  const sheddingOptions = JSON.parse(fs.readFileSync(path.join(__dirname, './data/shedding.json')));
-  const expressOptions = JSON.parse(fs.readFileSync(path.join(__dirname, './data/express.json')));
+  const pricesData = JSON.parse(fs.readFileSync(path.join(userDataPath, 'prices.json')));
+  const mattingOptions = JSON.parse(fs.readFileSync(path.join(userDataPath, 'matting.json')));
+  const tanglingOptions = JSON.parse(fs.readFileSync(path.join(userDataPath, 'tangling.json')));
+  const sheddingOptions = JSON.parse(fs.readFileSync(path.join(userDataPath, 'shedding.json')));
+  const expressOptions = JSON.parse(fs.readFileSync(path.join(userDataPath, 'express.json')));
 
   let total = 0;
 

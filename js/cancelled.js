@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-
-const cancelledPath = path.join(__dirname, './data/cancelledSessions.json');
+const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
+const cancelledPath = path.join(userDataPath, 'cancelledSessions.json');
 const cancelledListEl = document.getElementById('cancelledList');
 const dateFilterEl = document.getElementById('cancelledDateFilter');
 const clearFilterBtn = document.getElementById('clearFilterBtn');
@@ -104,7 +105,7 @@ document.querySelectorAll('.delete-btn').forEach(btn => {
       fs.writeFileSync(cancelledPath, JSON.stringify(cancelledData, null, 2));
 
       // ✅ Delete from sessionSummaries.json
-      const summariesPath = path.join(__dirname, './data/sessionSummaries.json');
+      const summariesPath = path.join(userDataPath, 'sessionSummaries.json');
       if (fs.existsSync(summariesPath)) {
         let summaries = JSON.parse(fs.readFileSync(summariesPath));
         summaries = summaries.filter(s =>
@@ -114,7 +115,7 @@ document.querySelectorAll('.delete-btn').forEach(btn => {
       }
 
       // ✅ Delete from clients.json > sessions[] and cleanup
-      const clientsPath = path.join(__dirname, './data/clients.json');
+      const clientsPath = path.join(userDataPath, 'clients.json');
       if (fs.existsSync(clientsPath)) {
         let clients = JSON.parse(fs.readFileSync(clientsPath));
         const client = clients.find(c => c.id === clientId);

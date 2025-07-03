@@ -1,36 +1,42 @@
+//const { use } = require('react');//
+
 window.addEventListener('DOMContentLoaded', () => {
   const fs = require('fs');
   const path = require('path');
   loadTopBar();
+  const { app } = require('@electron/remote');
+const userDataPath = app.getPath('userData');
+  const clientsPath = path.join(userDataPath, 'clients.json');
+  const summaryPath = path.join(userDataPath, 'sessionSummaries.json');
+  const groomersPath = path.join(userDataPath, 'groomers.json');
+  const jobOrderPath = path.join(userDataPath, 'jobOrderCounter.json');
 
-  const clientsPath = path.join(__dirname, './data/clients.json');
-  const summaryPath = path.join(__dirname, './data/sessionSummaries.json');
-  const groomersPath = path.join(__dirname, './data/groomers.json');
-  const jobOrderPath = path.join(__dirname, './data/jobOrderCounter.json');
-
-  const sizesPath = path.join(__dirname, './data/sizes.json');
-  const packagesPath = path.join(__dirname, './data/packages.json');
-  const expressPath = path.join(__dirname, './data/express.json');
-  const mattingPath = path.join(__dirname, './data/matting.json');
-  const tanglingPath = path.join(__dirname, './data/tangling.json');
-  const sheddingPath = path.join(__dirname, './data/shedding.json');
-  const pricesPath = path.join(__dirname, './data/prices.json');
+  const sizesPath = path.join(userDataPath, 'sizes.json');
+  const packagesPath = path.join(userDataPath, 'packages.json');
+  const expressPath = path.join(userDataPath, 'express.json');
+  const mattingPath = path.join(userDataPath, 'matting.json');
+  const tanglingPath = path.join(userDataPath, 'tangling.json');
+  const sheddingPath = path.join(userDataPath, 'shedding.json');
+  const pricesPath = path.join(userDataPath, 'prices.json');
 
   let pricingData = { packages: {}, express: {}, extras: {} };
   try {
-    pricingData.packages = JSON.parse(fs.readFileSync(pricesPath));
-    pricingData.express = JSON.parse(fs.readFileSync(expressPath)).reduce((acc, item) => {
-      acc[item.name] = item.price;
-      return acc;
-    }, {});
-    ['matting', 'tangling', 'shedding'].forEach(type => {
-      pricingData.extras[type] = {};
-      const filePath = path.join(__dirname, `./data/${type}.json`);
-      if (fs.existsSync(filePath)) {
-        const data = JSON.parse(fs.readFileSync(filePath));
-        data.forEach(item => pricingData.extras[type][item.label] = item.price);
-      }
-    });
+  pricingData.packages = JSON.parse(fs.readFileSync(pricesPath));
+  pricingData.express = JSON.parse(fs.readFileSync(expressPath)).reduce((acc, item) => {
+    acc[item.name] = item.price;
+    return acc;
+  }, {});
+
+  ['matting', 'tangling', 'shedding'].forEach(type => {
+    pricingData.extras[type] = {};
+    const filePath = path.join(userDataPath, `${type}.json`); 
+    if (fs.existsSync(filePath)) {
+      const data = JSON.parse(fs.readFileSync(filePath));
+      data.forEach(item => {
+        pricingData.extras[type][item.label] = item.price;
+      });
+    }
+  });
   } catch (err) {
     alert('Failed to load pricing data');
     console.error(err);
@@ -242,7 +248,6 @@ function printQRCode(button) {
     const owner = document.getElementById('ownerName').value.trim();
     const contact = document.getElementById('contact').value.trim();
     const address = document.getElementById('address').value.trim();
-    const clientId = `cli-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
     const petDivs = document.querySelectorAll('.pet-section');
 
     if (!owner || !contact || !address || contact.length !== 11 || !/^[0-9]+$/.test(contact)) {
@@ -336,7 +341,8 @@ expressSelected.forEach(service => {
       };
     });
 
- let clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
+let clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
+const clientId = `cli-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
 let existingClient = clients.find(c => c.owner === owner && c.contact === contact);
 
 if (existingClient) {
@@ -344,9 +350,11 @@ if (existingClient) {
   existingClient.pets = existingClient.pets.concat(pets);
 } else {
   // New client registration
-  const clientId = `cli-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   clients.push({ id: clientId, owner, contact, address, pets });
 }
+
+// ✅ Add this right after the if/else block:
+const finalClientId = existingClient ? existingClient.id : clientId;
 
 fs.writeFileSync(clientsPath, JSON.stringify(clients, null, 2));
 
@@ -358,7 +366,7 @@ fs.writeFileSync(clientsPath, JSON.stringify(clients, null, 2));
   jobOrder: p.jobOrder,
   owner,
   contact,
-  clientId,
+  clientId, finalClientId, 
   pet: p.name,
   breed: p.breed,
   analogy: p.analogy,
