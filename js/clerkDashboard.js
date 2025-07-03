@@ -182,19 +182,19 @@ window.addEventListener('DOMContentLoaded', () => {
       </label><br>
       <label>Pre-Grooming Remarks: <input type="text" class="pre-remarks"></label><br>
       <label>Post-Grooming Remarks: <input type="text" class="post-remarks" placeholder="(Handwritten)"></label><br>
-      <svg class="barcode"></svg><br>
-      <span class="pet-total" style="font-weight:bold">Pet Total: ₱0</span><br>
-      <button type="button" class="gen-barcode">Generate Barcode</button>
-      <button type="button" class="print-barcode">🖨 Print Barcode</button>
+<div class="qr-container" style="margin-top:10px;"></div>
+<button type="button" class="gen-qr">Generate QR Code</button>
+<button type="button" class="print-qr">🖨 Print QR</button>
       <button type="button" class="remove-btn">❌ Remove Pet</button>
     `;
    petSections.appendChild(section);
 
-    section.querySelector('.gen-barcode').addEventListener('click', e => {
-      generateBarcode(e.target);
-      updateTotalDisplay();
-    });
-    section.querySelector('.print-barcode').addEventListener('click', e => printBarcode(e.target));
+   section.querySelector('.gen-qr').addEventListener('click', e => {
+  generateQRCode(e.target);
+  updateTotalDisplay();
+});
+
+   section.querySelector('.print-qr').addEventListener('click', e => printQRCode(e.target));
     section.querySelector('.remove-btn').addEventListener('click', e => {
       e.target.closest('.pet-section').remove();
       updateTotalDisplay();
@@ -207,24 +207,31 @@ window.addEventListener('DOMContentLoaded', () => {
     updateTotalDisplay();
   }
 
-  function generateBarcode(button) {
-    const section = button.closest('.pet-section');
-    const barcode = Math.floor(100000 + Math.random() * 900000).toString();
-    const svg = section.querySelector('.barcode');
-    if (typeof JsBarcode === 'function') {
-      JsBarcode(svg, barcode, { format: "CODE128", width: 2, height: 50 });
-      svg.setAttribute('data-code', barcode);
-    } else {
-      alert('❌ JsBarcode not loaded.');
-    }
-  }
+function generateQRCode(button) {
+  const section = button.closest('.pet-section');
+  const qrContainer = section.querySelector('.qr-container');
 
-  function printBarcode(button) {
-    const svg = button.closest('.pet-section').querySelector('.barcode');
-    const newWin = window.open('', '', 'width=300,height=150');
-    newWin.document.write(`<html><head><title>Print Barcode</title></head><body>${svg.outerHTML}</body></html>`);
-    newWin.print();
-  }
+  const qrCodeText = Math.floor(100000 + Math.random() * 900000).toString();
+
+  qrContainer.innerHTML = ''; // Clear previous QR if any
+
+  new QRCode(qrContainer, {
+    text: qrCodeText,
+    width: 128,
+    height: 128,
+    correctLevel: QRCode.CorrectLevel.H
+  });
+
+  qrContainer.setAttribute('data-code', qrCodeText);
+}
+
+function printQRCode(button) {
+  const qr = button.closest('.pet-section').querySelector('.qr-container');
+  const newWin = window.open('', '', 'width=300,height=300');
+  newWin.document.write(`<html><head><title>Print QR</title></head><body>${qr.innerHTML}</body></html>`);
+  newWin.print();
+}
+
   const loadClientBtn = document.getElementById('loadClientBtn');
 
   const form = document.getElementById('clientForm');
@@ -235,6 +242,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const owner = document.getElementById('ownerName').value.trim();
     const contact = document.getElementById('contact').value.trim();
     const address = document.getElementById('address').value.trim();
+    const clientId = `cli-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
     const petDivs = document.querySelectorAll('.pet-section');
 
     if (!owner || !contact || !address || contact.length !== 11 || !/^[0-9]+$/.test(contact)) {
@@ -249,7 +257,7 @@ window.addEventListener('DOMContentLoaded', () => {
           return alert('Please fill out all pet details including groomer.');
         }
       }
-      if (!div.querySelector('.barcode').getAttribute('data-code')) {
+    if (!div.querySelector('.qr-container').getAttribute('data-code')) {
         return alert('Please generate barcode for each pet before submitting.');
       }
     }
@@ -288,7 +296,8 @@ const createdAt = sessionDate.toLocaleString('en-PH', { timeZone: 'Asia/Manila',
         deworming: div.querySelector('.vac-deworming').value
       };
       const jobOrder = Number(div.getAttribute('data-joborder'));
-      const petBarcode = div.querySelector('.barcode').getAttribute('data-code');
+     const petBarcode = div.querySelector('.qr-container').getAttribute('data-code');
+
 
       let price = 0;
       if (pkg !== 'None') {
@@ -318,7 +327,6 @@ expressSelected.forEach(service => {
           shedding,
           price,
           groomer,
-          redeemed: false,
           age,
           weight,
           size,
@@ -328,26 +336,20 @@ expressSelected.forEach(service => {
       };
     });
 
-    let clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
-    let existingClient = clients.find(c => c.owner === owner && c.contact === contact);
-    if (existingClient) {
-      pets.forEach(newPet => {
-        const match = existingClient.pets.find(p => p.barcode === newPet.barcode);
-        if (match) {
-          match.sessions.push(...newPet.sessions);
-          match.totalSpent += newPet.totalSpent;
-          if (match.sessions.length === 7 && !match.redeemedFree) {
-            alert(`🎉 ${match.name} is now eligible for 1 FREE grooming!`);
-            match.redeemedFree = true;
-          }
-        } else {
-          existingClient.pets.push(newPet);
-        }
-      });
-    } else {
-      clients.push({ owner, contact, address, pets });
-    }
-    fs.writeFileSync(clientsPath, JSON.stringify(clients, null, 2));
+ let clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
+let existingClient = clients.find(c => c.owner === owner && c.contact === contact);
+
+if (existingClient) {
+  // Append new pets to existing client
+  existingClient.pets = existingClient.pets.concat(pets);
+} else {
+  // New client registration
+  const clientId = `cli-${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  clients.push({ id: clientId, owner, contact, address, pets });
+}
+
+fs.writeFileSync(clientsPath, JSON.stringify(clients, null, 2));
+
 
     let summaries = fs.existsSync(summaryPath) ? JSON.parse(fs.readFileSync(summaryPath)) : [];
    pets.forEach(p => {
@@ -356,6 +358,7 @@ expressSelected.forEach(service => {
   jobOrder: p.jobOrder,
   owner,
   contact,
+  clientId,
   pet: p.name,
   breed: p.breed,
   analogy: p.analogy,
@@ -407,7 +410,7 @@ document.getElementById('printSummaryBtn')?.addEventListener('click', () => {
     matting: div.querySelector('.matting')?.value,
     tangling: div.querySelector('.tangling')?.value,
     shedding: div.querySelector('.shedding')?.value,
-    barcode: div.querySelector('.barcode')?.getAttribute('data-code'),
+    barcode: div.querySelector('.qr-container')?.getAttribute('data-code'),
     vaccinations: {
       parvo: div.querySelector('.vac-parvo')?.value,
       rabies: div.querySelector('.vac-rabies')?.value,
@@ -558,7 +561,8 @@ document.getElementById('printSummaryBtn')?.addEventListener('click', () => {
           <div class="section-title">Post-Grooming Remarks</div>
           <div class="remarks">${p.post || ''}</div>
 
-          <div class="barcode"><svg id="barcode-${i}"></svg></div>
+          <div class="barcode"><img src="${document.querySelectorAll('.qr-container')[i]?.querySelector('img')?.src || ''}" width="128" height="128"/></div>
+
 
           <div class="signature-group">
             <div class="signature-line">Groomed By</div>
@@ -570,7 +574,6 @@ document.getElementById('printSummaryBtn')?.addEventListener('click', () => {
         <div class="page-break"></div>
       `).join('')}
     </body>
-    <script src="https://cdn.jsdelivr.net/npm/jsbarcode"></script>
     <script>
       window.onload = () => {
         ${pets.map((_, i) => `

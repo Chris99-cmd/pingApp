@@ -1,219 +1,40 @@
 [
   {
+    "id": "cli-1751560163092-7706",
     "owner": "Joie Uba",
     "contact": "09987654321",
-    "address": "Buhangin NHA",
+    "address": "laverna",
     "pets": [
       {
-        "name": "Ashy",
-        "size": "Medium",
+        "name": "ashy",
+        "size": "Small",
         "pkg": "Basic",
-        "expressSelected": [
-          "Claw Trimming"
-        ],
-        "matting": "Mild",
-        "tangling": "Mild",
-        "shedding": "Mild",
+        "expressSelected": [],
+        "matting": "None",
+        "tangling": "None",
+        "shedding": "None",
         "groomer": "E. Tunacao",
-        "pre": "None",
+        "pre": "none",
         "post": "",
-        "breed": "Belgian",
+        "breed": "belgian",
         "analogy": "Canine",
-        "health": "None",
+        "health": "none",
         "vaccinations": {
-          "parvo": "No",
-          "rabies": "Yes",
-          "tickflea": "No",
-          "deworming": "Yes"
+          "parvo": true,
+          "rabies": true,
+          "tickflea": true,
+          "deworming": true
         },
-        "barcode": "909358",
-        "createdAt": "7/2/2025, 11:52:20 PM",
-        "age": 78,
-        "weight": 12,
+        "barcode": "416979",
+        "createdAt": "7/4/2025, 12:29:23 AM",
+        "age": 2,
+        "weight": 3,
         "gender": "Female",
-        "jobOrder": 1183,
+        "jobOrder": 1225,
         "sessions": [
           {
-            "date": "2025-07-02T15:52:20.000Z",
-            "createdAt": "7/2/2025, 11:52:20 PM",
-            "pkg": "Basic",
-            "express": [
-              "Claw Trimming"
-            ],
-            "matting": "Mild",
-            "tangling": "Mild",
-            "shedding": "Mild",
-            "price": 1090,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 78,
-            "weight": 12,
-            "size": "Medium",
-            "jobOrder": 1183,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:13:15.834Z",
-            "cancelReason": "wasap"
-          }
-        ],
-        "totalSpent": 1090
-      },
-      {
-        "name": "Tisoy",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [
-          "Ear Cleaning"
-        ],
-        "matting": "Mild",
-        "tangling": "Moderate",
-        "shedding": "Mild",
-        "groomer": "J. Carumba",
-        "pre": "None",
-        "post": "",
-        "breed": "Maltese",
-        "analogy": "Canine",
-        "health": "None",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "No",
-          "deworming": "Yes"
-        },
-        "barcode": "404410",
-        "createdAt": "7/2/2025, 11:52:20 PM",
-        "age": 18,
-        "weight": 4,
-        "gender": "Male",
-        "jobOrder": 1184,
-        "sessions": [
-          {
-            "date": "2025-07-02T15:52:20.000Z",
-            "createdAt": "7/2/2025, 11:52:20 PM",
-            "pkg": "Basic",
-            "express": [
-              "Ear Cleaning"
-            ],
-            "matting": "Mild",
-            "tangling": "Moderate",
-            "shedding": "Mild",
-            "price": 1140,
-            "groomer": "J. Carumba",
-            "redeemed": false,
-            "age": 18,
-            "weight": 4,
-            "size": "Small",
-            "jobOrder": 1184,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T15:55:18.432Z",
-            "cancelReason": "Biting"
-          }
-        ],
-        "totalSpent": 1140
-      }
-    ]
-  },
-  {
-    "owner": "Christopher Gonzales",
-    "contact": "09987651234",
-    "address": "Catitipan",
-    "pets": [
-      {
-        "name": "Queso",
-        "size": "Small",
-        "pkg": "Deluxe",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "Moderate",
-        "groomer": "J. Carumba",
-        "pre": "None",
-        "post": "",
-        "breed": "Persian",
-        "analogy": "Feline",
-        "health": "None",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "684078",
-        "createdAt": "7/2/2025, 11:53:27 PM",
-        "age": 9,
-        "weight": 3,
-        "gender": "Male",
-        "jobOrder": 1185,
-        "sessions": [
-          {
-            "date": "7/2/2025, 11:53:27 PM",
-            "createdAt": "2025-07-02T15:53:27.987Z",
-            "pkg": "Deluxe",
-            "express": [
-              "Claw Trimming"
-            ],
-            "matting": "Moderate",
-            "tangling": "None",
-            "shedding": "Moderate",
-            "price": 1190,
-            "groomer": "J. Carumba",
-            "redeemed": false,
-            "age": 9,
-            "weight": 3,
-            "size": "Small",
-            "jobOrder": 1185,
-            "owner": "Christopher Gonzales",
-            "contact": "09987651234",
-            "pet": "Queso",
-            "breed": "Persian",
-            "analogy": "Feline",
-            "gender": "Male",
-            "barcode": "684078",
-            "package": "Deluxe",
-            "total": 1190,
-            "status": "pending",
-            "payment": "cash",
-            "timeReleased": "2025-07-02T15:55:25.067Z"
-          }
-        ],
-        "totalSpent": 1190
-      }
-    ]
-  },
-  {
-    "owner": "gsfaasd",
-    "contact": "09987656551",
-    "address": "asdasd",
-    "pets": [
-      {
-        "name": "asdasd",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "qweq",
-        "post": "",
-        "breed": "asda",
-        "analogy": "Canine",
-        "health": "qweq",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "888965",
-        "createdAt": "7/2/2025, 11:57:56 PM",
-        "age": 2,
-        "weight": 3,
-        "gender": "Male",
-        "jobOrder": 1186,
-        "sessions": [
-          {
-            "date": "2025-07-02T15:57:56.000Z",
-            "createdAt": "7/2/2025, 11:57:56 PM",
+            "date": "2025-07-03T16:29:23.000Z",
+            "createdAt": "7/4/2025, 12:29:23 AM",
             "pkg": "Basic",
             "express": [],
             "matting": "None",
@@ -221,374 +42,31 @@
             "shedding": "None",
             "price": 290,
             "groomer": "E. Tunacao",
-            "redeemed": false,
             "age": 2,
             "weight": 3,
             "size": "Small",
-            "jobOrder": 1186,
+            "jobOrder": 1225,
             "status": "cancelled",
-            "cancelledAt": "2025-07-02T15:58:06.738Z",
-            "cancelReason": "asdasd"
-          }
-        ],
-        "totalSpent": 290
-      }
-    ]
-  },
-  {
-    "owner": "ddddddd",
-    "contact": "09987656656",
-    "address": "dddddddd",
-    "pets": [
-      {
-        "name": "ddddd",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "ddd",
-        "post": "",
-        "breed": "dddd",
-        "analogy": "Canine",
-        "health": "ddd",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "971766",
-        "createdAt": "7/3/2025, 12:14:44 AM",
-        "age": 2,
-        "weight": 3,
-        "gender": "Male",
-        "jobOrder": 1187,
-        "sessions": [
-          {
-            "date": "2025-07-02T16:14:44.000Z",
-            "createdAt": "7/3/2025, 12:14:44 AM",
-            "pkg": "Basic",
-            "express": [],
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "price": 290,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 2,
-            "weight": 3,
-            "size": "Small",
-            "jobOrder": 1187,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:15:43.023Z",
-            "cancelReason": "asdadad"
-          }
-        ],
-        "totalSpent": 290
-      },
-      {
-        "name": "sssss",
-        "size": "Small",
-        "pkg": "None",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "sss",
-        "post": "",
-        "breed": "ssss",
-        "analogy": "Canine",
-        "health": "sss",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "625323",
-        "createdAt": "7/3/2025, 12:14:44 AM",
-        "age": 2,
-        "weight": 3,
-        "gender": "Male",
-        "jobOrder": 1188,
-        "sessions": [
-          {
-            "date": "2025-07-02T16:14:44.000Z",
-            "createdAt": "7/3/2025, 12:14:44 AM",
-            "pkg": "None",
-            "express": [],
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "price": 0,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 2,
-            "weight": 3,
-            "size": "Small",
-            "jobOrder": 1188,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:16:32.654Z",
-            "cancelReason": "asdada"
-          }
-        ],
-        "totalSpent": 0
-      }
-    ]
-  },
-  {
-    "owner": "aaaaaa",
-    "contact": "09987878898",
-    "address": "aaaaaa",
-    "pets": []
-  },
-  {
-    "owner": "ffffff",
-    "contact": "09987877765",
-    "address": "fffff",
-    "pets": [
-      {
-        "name": "fffff",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "fffff",
-        "post": "",
-        "breed": "fffff",
-        "analogy": "Canine",
-        "health": "ffff",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "981506",
-        "createdAt": "7/3/2025, 12:18:32 AM",
-        "age": 2,
-        "weight": 4,
-        "gender": "Male",
-        "jobOrder": 1190,
-        "sessions": [
-          {
-            "date": "2025-07-02T16:18:32.000Z",
-            "createdAt": "7/3/2025, 12:18:32 AM",
-            "pkg": "Basic",
-            "express": [],
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "price": 290,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 2,
-            "weight": 4,
-            "size": "Small",
-            "jobOrder": 1190,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:19:12.419Z",
-            "cancelReason": "asdasda"
-          }
-        ],
-        "totalSpent": 290
-      }
-    ]
-  },
-  {
-    "owner": "qqqqqqq",
-    "contact": "09987876654",
-    "address": "qqqqq",
-    "pets": [
-      {
-        "name": "qqqqq",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "qqqqq",
-        "post": "",
-        "breed": "qqqqqq",
-        "analogy": "Canine",
-        "health": "qqqq",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "388068",
-        "createdAt": "7/3/2025, 12:22:56 AM",
-        "age": 3,
-        "weight": 4,
-        "gender": "Male",
-        "jobOrder": 1192,
-        "sessions": [
-          {
-            "date": "2025-07-02T16:22:56.000Z",
-            "createdAt": "7/3/2025, 12:22:56 AM",
-            "pkg": "Basic",
-            "express": [],
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "price": 290,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 3,
-            "weight": 4,
-            "size": "Small",
-            "jobOrder": 1192,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:25:11.733Z",
-            "cancelReason": "asdadasd"
-          }
-        ],
-        "totalSpent": 290
-      },
-      {
-        "name": "qwqwqw",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "qqqq",
-        "post": "",
-        "breed": "qwqwqw",
-        "analogy": "Canine",
-        "health": "qqqq",
-        "vaccinations": {
-          "parvo": "Yes",
-          "rabies": "Yes",
-          "tickflea": "Yes",
-          "deworming": "Yes"
-        },
-        "barcode": "450527",
-        "createdAt": "7/3/2025, 12:22:56 AM",
-        "age": 2,
-        "weight": 4,
-        "gender": "Male",
-        "jobOrder": 1193,
-        "sessions": [
-          {
-            "date": "2025-07-02T16:22:56.000Z",
-            "createdAt": "7/3/2025, 12:22:56 AM",
-            "pkg": "Basic",
-            "express": [],
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "price": 290,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 2,
-            "weight": 4,
-            "size": "Small",
-            "jobOrder": 1193,
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:24:54.230Z",
-            "cancelReason": "asdada"
-          }
-        ],
-        "totalSpent": 290
-      }
-    ]
-  },
-  {
-    "owner": "eeeeee",
-    "contact": "09987876654",
-    "address": "eeeee",
-    "pets": [
-      {
-        "name": "eeee",
-        "size": "Small",
-        "pkg": "Basic",
-        "expressSelected": [],
-        "matting": "None",
-        "tangling": "None",
-        "shedding": "None",
-        "groomer": "E. Tunacao",
-        "pre": "asda",
-        "post": "",
-        "breed": "eeee",
-        "analogy": "Canine",
-        "health": "",
-        "vaccinations": {
-          "parvo": false,
-          "rabies": false,
-          "tickflea": false,
-          "deworming": false
-        },
-        "barcode": "685654",
-        "createdAt": "7/3/2025, 12:23:36 AM",
-        "age": 2,
-        "weight": 4,
-        "gender": "Male",
-        "jobOrder": 1194,
-        "sessions": [
-          {
-            "date": "7/3/2025, 12:23:36 AM",
-            "createdAt": "2025-07-02T16:23:36.349Z",
-            "pkg": "Deluxe",
-            "express": [
-              "Claw Trimming",
-              "Ear Cleaning"
-            ],
-            "matting": "Mild",
-            "tangling": "Mild",
-            "shedding": "Mild",
-            "price": 1190,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": 2,
-            "weight": 4,
-            "size": "Small",
-            "jobOrder": 1194,
-            "owner": "eeeeee",
-            "contact": "09987876654",
-            "pet": "eeee",
-            "breed": "eeee",
-            "analogy": "Canine",
-            "gender": "Male",
-            "barcode": "685654",
-            "package": "Basic",
-            "total": 1190,
-            "status": "pending",
-            "payment": "cash",
-            "timeReleased": "2025-07-02T16:24:36.576Z"
+            "cancelledAt": "2025-07-03T16:30:12.612Z",
+            "cancelReason": "ayoko kasi"
           },
           {
-            "date": "2025-07-02",
-            "pkg": "Deluxe",
-            "price": 1190,
+            "date": "2025-07-04",
+            "pkg": "Basic",
+            "price": 290,
             "groomer": "E. Tunacao",
-            "express": [
-              "Ear Cleaning"
-            ],
+            "express": [],
             "redeemed": false,
-            "createdAt": "7/3/2025, 12:26:02 AM",
-            "jobOrder": 1195,
+            "createdAt": "7/4/2025, 12:49:09 AM",
+            "jobOrder": 1228,
             "age": 2,
-            "weight": 4,
-            "size": "Medium",
-            "health": "",
-            "matting": "Mild",
-            "tangling": "Mild",
-            "shedding": "Mild",
-            "pre": "asdasd",
+            "weight": 3,
+            "size": "Small",
+            "health": "none",
+            "matting": "None",
+            "tangling": "None",
+            "shedding": "None",
+            "pre": "none",
             "post": "",
             "vaccinations": {
               "parvo": true,
@@ -596,51 +74,14 @@
               "tickflea": true,
               "deworming": true
             },
-            "status": "cancelled",
-            "cancelledAt": "2025-07-02T16:26:16.328Z",
-            "cancelReason": "asdada"
-          },
-          {
-            "date": "2025-07-02",
-            "pkg": "Basic",
-            "price": 490,
-            "groomer": "E. Tunacao",
-            "express": [
-              "Ear Cleaning"
-            ],
-            "redeemed": false,
-            "createdAt": "7/3/2025, 12:29:09 AM",
-            "jobOrder": 1196,
-            "age": 2,
-            "weight": 4,
-            "size": "Medium",
-            "health": "",
-            "matting": "None",
-            "tangling": "None",
-            "shedding": "None",
-            "pre": "asda",
-            "post": "",
-            "vaccinations": {
-              "parvo": false,
-              "rabies": false,
-              "tickflea": false,
-              "deworming": false
-            },
-            "payment": "gcash",
-            "timeReleased": "2025-07-02T16:29:17.617Z"
+            "payment": "cash",
+            "timeReleased": "2025-07-03T16:49:37.259Z"
           }
         ],
-        "totalSpent": 2870
-      }
-    ]
-  },
-  {
-    "owner": "ffffffffff",
-    "contact": "09987676654",
-    "address": "adasd",
-    "pets": [
+        "totalSpent": 580
+      },
       {
-        "name": "flowerhorn",
+        "name": "tisoy",
         "size": "Small",
         "pkg": "Basic",
         "expressSelected": [],
@@ -648,71 +89,43 @@
         "tangling": "None",
         "shedding": "None",
         "groomer": "E. Tunacao",
-        "pre": "sadasd",
+        "pre": "none",
         "post": "",
-        "breed": "carpa",
+        "breed": "maltese",
         "analogy": "Canine",
-        "health": "asd",
+        "health": "none",
         "vaccinations": {
-          "parvo": false,
-          "rabies": false,
-          "tickflea": true,
-          "deworming": false
+          "parvo": "Yes",
+          "rabies": "Yes",
+          "tickflea": "Yes",
+          "deworming": "Yes"
         },
-        "barcode": "960173",
-        "createdAt": "7/3/2025, 3:08:44 AM",
-        "age": 2,
-        "weight": 4,
+        "barcode": "316925",
+        "createdAt": "7/4/2025, 12:47:06 AM",
+        "age": 3,
+        "weight": 5,
         "gender": "Male",
-        "jobOrder": 1197,
+        "jobOrder": 1227,
         "sessions": [
           {
-            "date": "2025-07-02T19:08:44.000Z",
-            "createdAt": "7/3/2025, 3:08:44 AM",
+            "date": "2025-07-03T16:47:06.000Z",
+            "createdAt": "7/4/2025, 12:47:06 AM",
             "pkg": "Basic",
             "express": [],
-            "matting": "Mild",
-            "tangling": "Mild",
-            "shedding": "Mild",
-            "price": 600,
-            "groomer": "E. Tunacao",
-            "redeemed": false,
-            "age": "2",
-            "weight": "4",
-            "size": "Small",
-            "jobOrder": 1197,
-            "payment": "cash",
-            "timeReleased": "2025-07-02T19:08:53.277Z"
-          },
-          {
-            "date": "2025-07-02",
-            "pkg": "Basic",
-            "price": 290,
-            "groomer": "E. Tunacao",
-            "express": [],
-            "redeemed": false,
-            "createdAt": "7/3/2025, 3:09:26 AM",
-            "jobOrder": 1198,
-            "age": 2,
-            "weight": 4,
-            "size": "Small",
-            "health": "asd",
             "matting": "None",
             "tangling": "None",
             "shedding": "None",
-            "pre": "sadasd",
-            "post": "",
-            "vaccinations": {
-              "parvo": false,
-              "rabies": false,
-              "tickflea": true,
-              "deworming": false
-            },
+            "price": 290,
+            "groomer": "E. Tunacao",
+            "age": 3,
+            "weight": 5,
+            "size": "Small",
+            "jobOrder": 1227,
             "payment": "cash",
-            "timeReleased": "2025-07-02T19:09:42.370Z"
+            "timeReleased": "2025-07-03T16:49:34.919Z"
           }
         ],
-        "totalSpent": 580
+        "totalSpent": 290
       }
     ]
   }

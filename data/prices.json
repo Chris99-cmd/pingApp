@@ -1,14 +1,10 @@
 {
   "Basic": {
     "Small": 290,
-    "Medium": 390
-  },
-  "Deluxe": {
-    "Small": 390,
-    "Medium": 490
+    "Large": 390
   },
   "Premium": {
     "Small": 640,
-    "Medium": 740
+    "Large": 740
   }
 }

@@ -49,18 +49,21 @@ body {
   right: 0;
   background: #262626;
   border: 1px solid #333;
-  border-radius: 6px;
   overflow: hidden;
   z-index: 100;
 }
 
 .dropdown button {
-  padding: 10px 20px;
+ all: unset;
+  display: block;
   width: 100%;
-  background: none;
-  border: none;
-  color: #f0f0f0;
+  font-size: 0.8rem;
+  color: #e0e0e0;
+  padding: 4px 0;
+  border-bottom: 1px solid #444;
+  cursor: pointer;
   text-align: left;
+  padding: 5px 20px;
 }
 
 .dropdown button:hover {

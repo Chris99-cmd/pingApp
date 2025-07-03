@@ -169,6 +169,17 @@ cancelBtn.addEventListener('click', () => {
     session.status = 'cancelled';
     session.cancelledAt = new Date().toISOString();
     session.cancelReason = reason;
+const cancelledPath = path.join(__dirname, './data/cancelledSessions.json');
+let cancelled = fs.existsSync(cancelledPath)
+  ? JSON.parse(fs.readFileSync(cancelledPath))
+  : [];
+
+session.clientId = session.clientId || (client && client.id) || '';
+session.barcode = session.barcode || session.petBarcode || '';
+
+cancelled.push(session);
+
+fs.writeFileSync(cancelledPath, JSON.stringify(cancelled, null, 2));
 
     // Update sessionSummaries.json
     const summaries = JSON.parse(fs.readFileSync(summariesPath));

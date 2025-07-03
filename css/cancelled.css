@@ -21,7 +21,8 @@ h1 {
 .session-header,
 .session-row {
   display: grid;
-  grid-template-columns: repeat(10, minmax(100px, 1fr));
+  grid-template-columns: repeat(11, minmax(100px, 1fr));
+
 
   gap: 12px;
   padding: 12px 10px;

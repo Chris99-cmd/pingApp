@@ -175,44 +175,55 @@ const displayTime = rawTime
 }
 
 
-  function loadClientData() {
-    const clientData = localStorage.getItem('selectedClient');
-    const petBarcode = localStorage.getItem('selectedPetBarcode');
-
-    if (!clientData || !petBarcode) {
-      alert('❌ Missing client or pet data!');
-      return;
-    }
-
-    currentClient = JSON.parse(clientData);
-    currentPet = currentClient.pets.find(p => p.barcode === petBarcode);
-    if (!currentPet) {
-      alert('⚠️ Pet not found in client data.');
-      return;
-    }
-
-    currentPet.sessions = currentPet.sessions || [];
-
-    document.getElementById('ownerInfo').innerHTML = `
-      <h3>Owner Info</h3>
-      <p><strong>Name:</strong> ${currentClient.owner}</p>
-      <p><strong>Contact:</strong> ${currentClient.contact}</p>
-      <p><strong>Address:</strong> ${currentClient.address}</p>
-    `;
-
-    document.getElementById('petInfo').innerHTML = `
-      <h3>Pet Info</h3>
-      <p><strong>Name:</strong> ${currentPet.name}</p>
-      <p><strong>Breed:</strong> ${currentPet.breed}</p>
-      <p><strong>Analogy:</strong> ${currentPet.analogy}</p>
-      <p><strong>Gender:</strong> ${currentPet.gender || 'Unknown'}</p>
-    `;
-
-    document.getElementById('sessionAge').value = currentPet.age || '';
-    document.getElementById('sessionWeight').value = currentPet.weight || '';
-
-    updateSessionHistory();
+function loadClientData() {
+  const barcode = localStorage.getItem('selectedBarcode');
+  if (!barcode) {
+    alert('❌ Missing barcode. Please scan from landing page.');
+    window.location.href = 'landingPage.html';
+    return;
   }
+
+  const clients = fs.existsSync(clientsPath) ? JSON.parse(fs.readFileSync(clientsPath)) : [];
+  for (const client of clients) {
+    for (const pet of client.pets) {
+      if (pet.barcode === barcode) {
+        currentClient = client;
+        currentPet = pet;
+        break;
+      }
+    }
+    if (currentClient && currentPet) break;
+  }
+
+  if (!currentClient || !currentPet) {
+    alert('⚠️ Pet not found. Please scan again.');
+    window.location.href = 'landingPage.html';
+    return;
+  }
+
+  currentPet.sessions = currentPet.sessions || [];
+
+  document.getElementById('ownerInfo').innerHTML = `
+    <h3>Owner Info</h3>
+    <p><strong>Name:</strong> ${currentClient.owner}</p>
+    <p><strong>Contact:</strong> ${currentClient.contact}</p>
+    <p><strong>Address:</strong> ${currentClient.address}</p>
+  `;
+
+  document.getElementById('petInfo').innerHTML = `
+    <h3>Pet Info</h3>
+    <p><strong>Name:</strong> ${currentPet.name}</p>
+    <p><strong>Breed:</strong> ${currentPet.breed}</p>
+    <p><strong>Analogy:</strong> ${currentPet.analogy}</p>
+    <p><strong>Gender:</strong> ${currentPet.gender || 'Unknown'}</p>
+  `;
+
+  document.getElementById('sessionAge').value = currentPet.age || '';
+  document.getElementById('sessionWeight').value = currentPet.weight || '';
+
+  updateSessionHistory();
+}
+
 
   function calculateAndDisplayTotal() {
     const size = document.getElementById('sessionSize').value;
@@ -355,6 +366,7 @@ expressSelected.forEach(service => {
     fs.writeFileSync(summaryPath, JSON.stringify(summaries, null, 2));
 
     alert('✅ Session saved!');
+    localStorage.removeItem('selectedBarcode');
     window.location = 'clerkDashboard.html';
   });
 

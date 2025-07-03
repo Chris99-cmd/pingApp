@@ -76,8 +76,7 @@
 
     if (!foundClient || !foundPet) return alert(`No pet found for barcode: ${searchBarcode}`);
 
-    localStorage.setItem('selectedClient', JSON.stringify(foundClient));
-    localStorage.setItem('selectedPetBarcode', foundPet.barcode);
+   localStorage.setItem('selectedBarcode', foundPet.barcode);
     window.location.href = 'addSession.html';
   });
 

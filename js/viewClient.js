@@ -115,7 +115,7 @@ function calculateModalTotal() {
   const shed = sheddingOptions.find(s => s.label === shedding);
   if (shed) total += shed.price;
 
-  // Update the modalTotal field
+  
   const totalField = document.getElementById('modalTotal');
   if (totalField) totalField.value = `₱${total}`;
 
@@ -185,7 +185,7 @@ function loadClients() {
   if (!fs.existsSync(sessionSummariesPath)) return;
   const summaries = JSON.parse(fs.readFileSync(sessionSummariesPath));
 
-  // Merge payment and releasedTime from sessionSummaries into each session
+
   for (const summary of summaries) {
     const { jobOrder, payment, releasedTime } = summary;
     for (const client of allClients) {
@@ -224,7 +224,7 @@ function applyFilters() {
   let sessionCount = 0;
   let totalAmount = 0;
 
-  // Get today's date without time
+ 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -233,17 +233,16 @@ function applyFilters() {
   allClients.forEach(client => {
     client.pets.forEach(pet => {
       pet.sessions?.forEach(session => {
-        // Skip cancelled sessions
+        
 if (session.status === 'cancelled') return;
 
         const sessionDate = new Date(session.date);
         const compareDate = new Date(sessionDate);
-        compareDate.setHours(0, 0, 0, 0); // remove time part
+        compareDate.setHours(0, 0, 0, 0); 
 
-        // If no filters applied, default to today's sessions only
         if (isFilterEmpty && compareDate.getTime() !== today.getTime()) return;
 
-        // Otherwise apply normal filters
+      
         if (
           (groomerVal && session.groomer !== groomerVal) ||
           (analogyVal && pet.analogy !== analogyVal) ||
@@ -262,6 +261,7 @@ if (session.status === 'cancelled') return;
           <td>${session.jobOrder || '-'}</td>
           <td>${client.owner}</td>
           <td>${client.contact}</td>
+          <td class="client-id">${client.id || '-'}</td>
           <td>${pet.name}</td>
           <td>${pet.breed}</td>
           <td>${pet.analogy}</td>
@@ -279,7 +279,13 @@ if (session.status === 'cancelled') return;
           <td>₱${session.price}</td>
           <td>${session.timeReleased ? formatReadableTime(session.timeReleased) : '-'}</td>
           <td>${session.payment || 'pending'}</td>
-          <td><span class="view-icon" data-owner="${client.owner}" data-contact="${client.contact}" data-barcode="${pet.barcode}" data-joborder="${session.jobOrder}">🔍</span></td>
+          <td><span class="view-icon"
+  data-owner="${client.owner}" 
+  data-contact="${client.contact}" 
+  data-clientid="${client.id}" 
+  data-barcode="${pet.barcode}" 
+  data-joborder="${session.jobOrder}">🔍</span></td>
+
         `;
 
         tableBody.appendChild(row);
@@ -307,6 +313,8 @@ function showModal(client, pet, session) {
   const expressList = session.express || [];
 
   modalFields.innerHTML = `
+  <label>Client Name: <input id="modalClientName" type="text" value="${client.owner}" disabled></label>
+<label>Contact #: <input id="modalClientContact" type="text" value="${client.contact}" disabled></label>
     <label>Name: <input id="modalName" type="text" value="${pet.name}"></label>
     <label>Breed: <input id="modalBreed" type="text" value="${pet.breed}"></label>
     <label>Analogy: 
@@ -341,7 +349,7 @@ function showModal(client, pet, session) {
     <label>Total: <input id="modalTotal" type="text" value="₱${session.price}" disabled></label>
   `;
 
-  // Load dropdowns
+
   const loadSelectOptions = (id, values, selectedValue, isMulti = false) => {
     const select = document.getElementById(id);
 
@@ -366,7 +374,7 @@ function showModal(client, pet, session) {
   loadSelectOptions('modalShedding', loadJsonArray(sheddingPath, 'label'), session.shedding);
   loadSelectOptions('modalGroomer', loadGroomerList(), session.groomer);
 
-  // Add listeners to update total on change
+
   ['modalSize', 'modalPkg', 'modalMatting', 'modalTangling', 'modalShedding', 'modalExpress'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('change', calculateModalTotal);
@@ -391,10 +399,14 @@ function loadGroomerList() {
 }
 
 editBtn.onclick = () => {
-  modalFields.querySelectorAll('input:not(#modalTotal):not(#modalExpress)').forEach(i => i.disabled = false);
+  ['modalClientName', 'modalClientContact', 'modalName', 'modalBreed', 'modalAge', 'modalWeight'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = false;
+  });
   saveBtn.style.display = 'inline-block';
   editBtn.style.display = 'none';
 };
+
 
 saveBtn.onclick = () => {
   showConfirmation('Are you sure you want to save these changes?', () => {
@@ -417,16 +429,16 @@ saveBtn.onclick = () => {
 
     const { client, pet, session } = currentSessionRef;
 
-    // Update pet info
     pet.name = updated.name;
     pet.breed = updated.breed;
+    client.owner = document.getElementById('modalClientName').value;
+client.contact = document.getElementById('modalClientContact').value;
     pet.analogy = updated.analogy;
     pet.gender = updated.gender;
 
      const newPrice = calculateModalTotal();
     session.price = newPrice;
 
-    // Update session info
     Object.assign(session, {
       age: updated.age,
       weight: updated.weight,
@@ -440,7 +452,6 @@ saveBtn.onclick = () => {
       payment: updated.payment
     });
 
-    // Save to both JSONs
     fs.writeFileSync(clientsPath, JSON.stringify(allClients, null, 2));
 
     const summaries = JSON.parse(fs.readFileSync(sessionSummariesPath));
@@ -464,39 +475,41 @@ deleteBtn.onclick = () => {
   showConfirmation('Are you sure you want to delete this session?', () => {
     const { client, pet, session } = currentSessionRef;
 
-    // Remove the session from pet.sessions
-    pet.sessions = pet.sessions.filter(s =>
-      String(s.jobOrder) !== String(session.jobOrder)
-    );
+    // 🗑 Remove the session from pet.sessions
+    pet.sessions = pet.sessions.filter(s => String(s.jobOrder) !== String(session.jobOrder));
 
-    // Optionally clean up pets with no sessions
+    // 🗑 Remove the pet if it has no sessions left
     if (pet.sessions.length === 0) {
       client.pets = client.pets.filter(p => p.barcode !== pet.barcode);
     }
 
-    // Delete from sessionSummaries.json
-    const sessionSummaryPath = path.join(__dirname, './data/sessionSummaries.json');
-    let sessionSummaries = [];
-
-    if (fs.existsSync(sessionSummaryPath)) {
-      sessionSummaries = JSON.parse(fs.readFileSync(sessionSummaryPath));
+    // 🗑 Remove the client entirely if they have no pets left
+    if (client.pets.length === 0) {
+      const clientIndex = allClients.findIndex(c => c.id === client.id);
+      if (clientIndex !== -1) {
+        allClients.splice(clientIndex, 1);
+      }
     }
 
-    sessionSummaries = sessionSummaries.filter(s =>
-      String(s.jobOrder) !== String(session.jobOrder) ||
-      s.barcode !== pet.barcode
-    );
+const sessionSummaryPath = path.join(__dirname, './data/sessionSummaries.json');
+let sessionSummaries = [];
 
-    // Save both updated JSONs
-    fs.writeFileSync(sessionSummaryPath, JSON.stringify(sessionSummaries, null, 2));
+if (fs.existsSync(sessionSummaryPath)) {
+  sessionSummaries = JSON.parse(fs.readFileSync(sessionSummaryPath));
+}
+
+sessionSummaries = sessionSummaries.filter(s =>
+  String(s.jobOrder) !== String(session.jobOrder)
+);
+
+// Always write it — even if the file was missing
+fs.writeFileSync(sessionSummaryPath, JSON.stringify(sessionSummaries, null, 2));
     fs.writeFileSync(clientsPath, JSON.stringify(allClients, null, 2));
 
     applyFilters();
     modal.style.display = 'none';
   });
 };
-
-
 
 closeBtn.onclick = () => {
   modal.style.display = 'none';
@@ -791,7 +804,7 @@ if (backBtn && modal && input && confirmBtn && cancelBtn) {
   }
 
   window.addEventListener('DOMContentLoaded', () => {
-  applyFilters(); // <-- show today's data immediately
+  applyFilters(); 
 });
 
 });

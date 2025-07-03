@@ -191,13 +191,18 @@ canvas.height = 500; // or 60 for wider spacing
 
 
 google.charts.load('current', { packages: ['corechart'] });
+
 google.charts.setOnLoadCallback(() => {
-  loadDashboard(); // ensures sessions are loaded first
-  drawGooglePie(); // then draw chart from loaded data
+  window.googleChartsReady = true; // Flag that it's safe to call drawGooglePie
+  loadDashboard(); // this will call applyFilters, which will now be safe
 });
 
-
 function drawGooglePie(data = allSessions) {
+  if (!window.googleChartsReady || typeof google === 'undefined' || !google.visualization) {
+    console.warn("Google Charts not yet ready.");
+    return;
+  }
+
   if (!fs.existsSync(packagesPath)) return;
 
   const availablePackages = JSON.parse(fs.readFileSync(packagesPath));
@@ -235,6 +240,7 @@ function drawGooglePie(data = allSessions) {
   const chart = new google.visualization.PieChart(document.getElementById('googlePieChart'));
   chart.draw(dataTable, options);
 }
+
 
     function exportCSV() {
       const headers = ['Date', 'Owner', 'Pet Name', 'Package', 'Total', 'Groomer'];
