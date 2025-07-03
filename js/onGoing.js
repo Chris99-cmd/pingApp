@@ -143,7 +143,10 @@ saveBtn.addEventListener('click', () => {
 
 
         // 🔁 Recalculate totalSpent
-        pet.totalSpent = pet.sessions.reduce((sum, s) => sum + (s.price || 0), 0);
+        pet.totalSpent = pet.sessions
+  .filter(s => s.status !== 'cancelled')
+  .reduce((sum, s) => sum + (s.price || 0), 0);
+
 
         console.log(`✅ Updated client pet session and totalSpent`);
       } else {
@@ -191,6 +194,7 @@ fs.writeFileSync(cancelledPath, JSON.stringify(cancelled, null, 2));
       summary.status = 'cancelled';
       summary.cancelledAt = session.cancelledAt;
       summary.cancelReason = session.cancelReason;
+      summary.total = 0;
     }
     fs.writeFileSync(summariesPath, JSON.stringify(summaries, null, 2));
 
@@ -205,6 +209,7 @@ fs.writeFileSync(cancelledPath, JSON.stringify(cancelled, null, 2));
           petSession.status = 'cancelled';
           petSession.cancelledAt = session.cancelledAt;
           petSession.cancelReason = session.cancelReason;
+          petSession.price = 0;
         }
       }
     }

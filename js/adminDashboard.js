@@ -85,7 +85,7 @@ function populateFilters(data) {
 
   updateSummary(filtered);
   drawLineChart(filtered); // <- This uses your updated daily logic
-  drawGooglePie(filtered); // <- Keep this too!
+   // <- Keep this too!
 }
 
     function updateSummary(data) {
@@ -199,49 +199,7 @@ google.charts.setOnLoadCallback(() => {
   loadDashboard(); // this will call applyFilters, which will now be safe
 });
 
-function drawGooglePie(data = allSessions) {
-  if (!window.googleChartsReady || typeof google === 'undefined' || !google.visualization) {
-    console.warn("Google Charts not yet ready.");
-    return;
-  }
 
-  if (!fs.existsSync(packagesPath)) return;
-
-  const availablePackages = JSON.parse(fs.readFileSync(packagesPath));
-  const packageCounts = {};
-
-  availablePackages.forEach(pkg => {
-    packageCounts[pkg] = 0;
-  });
-
-  data.forEach(session => {
-    const pkg = session.package;
-    if (packageCounts.hasOwnProperty(pkg)) {
-      packageCounts[pkg]++;
-    }
-  });
-
-  const pieData = [['Package', 'Avails']];
-  for (let pkg in packageCounts) {
-    pieData.push([pkg, packageCounts[pkg]]);
-  }
-
-  console.log('📊 Pie Chart Data:', pieData);
-
-  const dataTable = google.visualization.arrayToDataTable(pieData);
-
-  const options = {
-    title: 'Package Usage',
-    is3D: true,
-    backgroundColor: '#1f1f1f',
-    legend: { textStyle: { color: '#fff' } },
-    titleTextStyle: { color: '#fff' },
-    chartArea: { width: '90%', height: '80%' }
-  };
-
-  const chart = new google.visualization.PieChart(document.getElementById('googlePieChart'));
-  chart.draw(dataTable, options);
-}
 
 
     function exportCSV() {

@@ -117,7 +117,7 @@ canvas {
 
 .chart-block {
   flex-grow: 1;
-  min-width: 300px;
+  min-width: 1200px;
 }
 
 .chart-block.pie-chart {
