@@ -26,8 +26,10 @@ function capitalize(str) {
 }
 
 try {
+  // Load package prices
   pricingData.packages = JSON.parse(fs.readFileSync(pricesPath));
 
+  // Load express services
   const expressList = JSON.parse(fs.readFileSync(expressPath));
   pricingData.express = {};
   const expressContainer = document.querySelector('.express-group');
@@ -38,9 +40,16 @@ try {
     expressContainer.appendChild(label);
   });
 
+  // Load extras: matting, tangling, shedding
+  const extrasPath = {
+    matting: mattingPath,
+    tangling: tanglingPath,
+    shedding: sheddingPath,
+  };
+
   ['matting', 'tangling', 'shedding'].forEach(type => {
     pricingData.extras[type] = {};
-    const data = JSON.parse(fs.readFileSync(path.join(__dirname, `./data/${type}.json`)));
+    const data = JSON.parse(fs.readFileSync(extrasPath[type]));
     const select = document.getElementById(`session${capitalize(type)}`);
     select.innerHTML = '';
     data.forEach(item => {
@@ -51,10 +60,13 @@ try {
       select.appendChild(opt);
     });
   });
+
 } catch (err) {
   alert('❌ Failed to load pricing data');
   console.error(err);
 }
+
+  
 
 function getOptions(filePath, labelKey = 'label') {
   try {

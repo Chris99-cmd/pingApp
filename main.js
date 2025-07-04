@@ -50,8 +50,9 @@ function copyDefaultDataFilesOnce() {
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1000,
-    height: 700,
+    width: 1400,
+    height: 900,
+    show: false, // wait until ready-to-show
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -64,6 +65,15 @@ function createWindow() {
   win.once('ready-to-show', () => {
     win.show();
     win.focus();
+  });
+
+  // Optional: force focus regain after blur (helps with input lag on Windows)
+  win.on('blur', () => {
+    setTimeout(() => {
+      if (!win.isDestroyed()) {
+        win.focus();
+      }
+    }, 300);
   });
 
   const usersPath = path.join(userDataDir, 'users.json');

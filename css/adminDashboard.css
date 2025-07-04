@@ -54,16 +54,15 @@ body {
 }
 
 .dropdown button {
- all: unset;
+  all: unset;
   display: block;
   width: 100%;
   font-size: 0.8rem;
   color: #e0e0e0;
-  padding: 4px 0;
+  padding: 5px 20px;
   border-bottom: 1px solid #444;
   cursor: pointer;
   text-align: left;
-  padding: 5px 20px;
 }
 
 .dropdown button:hover {
@@ -102,43 +101,36 @@ button:hover {
   background-color: #333;
 }
 
-canvas {
-  background-color: #242424;
-  image-rendering: crisp-edges;
-  font-smooth: never;
-  -webkit-font-smoothing: none;
-}
-
 .charts {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .chart-block {
-  flex-grow: 1;
-  min-width: 1200px;
-}
-
-.chart-block.pie-chart {
-  flex: 1;
+  flex: 1 1 100%;
 }
 
 .chart-block.line-chart {
-  flex: 2;
-  overflow: hidden;
+  overflow-x: auto;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 .chart-scroll {
+  width: 100%;
   overflow-x: auto;
-  overflow-y: hidden;
 }
 
 .chart-scroll canvas {
-  width: 1600px; /* or dynamic based on days */
-  height: 550px;
+  min-width: 1000px;
+  width: 100%;
+  max-height: 500px;
+  height: auto;
+  background-color: #242424;
+  border-radius: 10px;
 }
-
 
 .legend {
   margin-top: 15px;
@@ -147,7 +139,6 @@ canvas {
   line-height: 1.6;
   text-align: center;
 }
-
 
 #groomerList,
 #clerkList {
@@ -182,8 +173,10 @@ canvas {
   background-color: #b71c1c;
 }
 
-#googlePieChart {
-  width: 101%;
-  height: 400px;
-  border-radius: 10px;
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px;
 }

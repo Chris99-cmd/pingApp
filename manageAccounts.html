@@ -82,7 +82,7 @@
     const fs = require('fs');
     const path = require('path');
      const { app } = require('@electron/remote');
-    const userDataPath = remote.app.getPath('userData');
+    const userDataPath = app.getPath('userData');
     const usersPath = path.join(userDataPath, 'users.json');
 
     function loadUsers() {
